@@ -21,6 +21,11 @@ export const FormFields: IFormFields[] = [
     data: "kunal@kunatastic.me",
   },
   {
+    label: "Phone",
+    type: "tel",
+    data: "+91-9888888888",
+  },
+  {
     label: "Date of Birth",
     type: "date",
     data: "",
