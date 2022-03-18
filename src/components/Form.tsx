@@ -27,10 +27,17 @@ function Form(props: IFormFieldProps) {
     showResultsCB(formField);
   }
 
+  function clearFormFields(event: React.FormEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    setFormField(
+      formField.map((field) => {
+        return { ...field, value: "" };
+      })
+    );
+  }
+
   return (
     <>
-      {console.log("=============== NEW ITERATIONS ==========")}
-      {console.log("Form Field :", formField)}
       <form onSubmit={handleFormSubmit}>
         {formField.map((field, index) => {
           const { label, type, id, value } = field;
@@ -93,6 +100,12 @@ function Form(props: IFormFieldProps) {
             onClick={closeFormCB}
           >
             Home 🏠
+          </button>
+          <button
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+            onClick={clearFormFields}
+          >
+            Cancel
           </button>
         </div>
       </form>
