@@ -21,8 +21,7 @@ function Form(props: IFormField) {
     setFormField(newformField);
   }
 
-  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function handleFormSubmit() {
     showResultsCB(formFieldData);
   }
 
@@ -32,61 +31,59 @@ function Form(props: IFormField) {
       {console.log("Form Data :", formFieldData)}
       {console.log("ID :", id)}
       {console.log("Form Field :", formField)}
-      <form onSubmit={handleFormSubmit}>
-        {formField.map((field, index) => {
-          const { label, type, id } = field;
-          return (
-            <div key={index} className="pt-4">
-              <label className="text-gray-900 font-semibold py-2">{label}</label>
-              <div className="flex">
-                <input
-                  className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-                  type={type}
-                  onChange={(e) => setFormFeildData({ ...formFieldData, [id]: e.target.value })}
-                  value={formFieldData[id]}
-                />
-                <button
-                  className="text-black border-2 border-transparent  hover:border-red-600 w-full bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
-                  onClick={() => removeField(id)}
-                >
-                  Remove ❌
-                </button>
-              </div>
+      {formField.map((field, index) => {
+        const { label, type, id } = field;
+        return (
+          <div key={index} className="pt-4">
+            <label className="text-gray-900 font-semibold py-2">{label}</label>
+            <div className="flex">
+              <input
+                className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+                type={type}
+                onChange={(e) => setFormFeildData({ ...formFieldData, [id]: e.target.value })}
+                value={formFieldData[id]}
+              />
+              <button
+                className="text-black border-2 border-transparent  hover:border-red-600 w-full bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
+                onClick={() => removeField(id)}
+              >
+                Remove ❌
+              </button>
             </div>
-          );
-        })}
-        <div className="pt-4">
-          <label className="text-gray-900 font-semibold py-2">Add Field</label>
-          <div className="flex">
-            <input
-              className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-              type="text"
-              onChange={(e) => setNewFieldData(e.target.value)}
-              value={newFieldData}
-            />
-            <button
-              className="text-white w-full bg-gray-500 mx-2 px-4 py-2 border-2 border-transparent  hover:border-green-500 rounded-lg hover:bg-gray-600"
-              onClick={addNewField}
-            >
-              Add New Field ➕
-            </button>
           </div>
-        </div>
-        <div className="flex justify-between w-full mt-5">
+        );
+      })}
+      <div className="pt-4">
+        <label className="text-gray-900 font-semibold py-2">Add Field</label>
+        <div className="flex">
+          <input
+            className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+            type="text"
+            onChange={(e) => setNewFieldData(e.target.value)}
+            value={newFieldData}
+          />
           <button
-            className="text-white w-full bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
-            type="submit"
+            className="text-white w-full bg-gray-500 mx-2 px-4 py-2 border-2 border-transparent  hover:border-green-500 rounded-lg hover:bg-gray-600"
+            onClick={addNewField}
           >
-            Submit ✔
-          </button>
-          <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
-            onClick={closeFormCB}
-          >
-            Home 🏠
+            Add New Field ➕
           </button>
         </div>
-      </form>
+      </div>
+      <div className="flex justify-between w-full mt-5">
+        <button
+          className="text-white w-full bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+          onClick={handleFormSubmit}
+        >
+          Submit ✔
+        </button>
+        <button
+          className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+          onClick={closeFormCB}
+        >
+          Home 🏠
+        </button>
+      </div>
     </>
   );
 }
