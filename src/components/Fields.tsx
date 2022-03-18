@@ -18,7 +18,8 @@ function Fields(props: IFieldProps) {
         />
         <button
           className="text-black border-2 border-transparent  hover:border-red-600 w-full bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
-          onClick={(e) => onClickHandler(e, id)}
+          onClick={(e) => onClickHandler(id)}
+          type="button"
         >
           Remove ❌
         </button>
