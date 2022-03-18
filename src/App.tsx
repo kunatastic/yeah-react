@@ -5,11 +5,11 @@ import Form from "./components/Form";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import Result from "./components/Result";
-import { IFormFieldData } from "./types/forms";
+import { IFormFields } from "./types/forms";
 
 function App() {
   const [state, setState] = useState<string>("HOME");
-  const [results, setResults] = useState<IFormFieldData>({});
+  const [results, setResults] = useState<IFormFields[]>([]);
 
   function closeForm() {
     setState("HOME");
@@ -19,7 +19,7 @@ function App() {
     setState("FORM");
   }
 
-  function showResults(results: IFormFieldData) {
+  function showResults(results: IFormFields[]) {
     setState("RESULT");
     setResults(results);
   }

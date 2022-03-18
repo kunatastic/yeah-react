@@ -1,8 +1,11 @@
-export interface IFormField {
+export interface IFormFieldProps {
   closeFormCB: () => void;
-  showResultsCB: (results: IFormFieldData) => void;
+  showResultsCB: (results: IFormFields[]) => void;
 }
 
-export interface IFormFieldData {
-  [key: string]: string;
+export interface IFormFields {
+  id: number;
+  label: string;
+  type: string;
+  value: string;
 }
