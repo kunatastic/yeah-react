@@ -9,3 +9,9 @@ export interface IFormFields {
   type: string;
   value: string;
 }
+
+export interface IFormInputComponentProps {
+  field: IFormFields;
+  onClickHandler: (e: any) => void;
+  onChangeHandler: (e: any) => void;
+}
