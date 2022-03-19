@@ -139,6 +139,12 @@ function Form(props: IFormFieldProps) {
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
             onClick={(e) => saveFormData(e, formField)}
           >
+            Cancel ✖
+          </button>
+          <button
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+            onClick={(e) => saveFormData(e, formField)}
+          >
             Save 💾
           </button>
         </div>
