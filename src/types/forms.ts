@@ -10,8 +10,8 @@ export interface IFormFields {
   value: string;
 }
 
-export interface IFormInputComponentProps {
+export interface IFieldProps {
   field: IFormFields;
-  onClickHandler: (e: any) => void;
-  onChangeHandler: (e: any) => void;
+  onClickHandler: (e: any, id: number) => void;
+  onChangeHandler: (e: any, id: number) => void;
 }
