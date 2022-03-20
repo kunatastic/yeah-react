@@ -1,3 +1,4 @@
+import { Link, navigate } from "raviger";
 import React, { useEffect, useState, useRef } from "react";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData, IFormFieldProps } from "../types/forms";
@@ -24,25 +25,26 @@ function getLocalForms(): IFormData[] {
 }
 
 //! Get the Form Data from LocalStorage or return default value
-function initialFormData(initialData: IFormData): IFormData {
-  if (initialData) {
-    return initialData;
-  }
+// TODO: ADD a custom redirect to `/link` if the formId doesn't exist in the LocalStorage
+function getInitialFormData(formId: string): IFormData {
+  console.log("YWSSSS");
   const localForms = getLocalForms();
-  const newform: IFormData = {
-    id: Number(new Date()),
-    title: "Untitled",
+  const formData = localForms.find((form) => form.id === formId);
+  const newFormData = {
+    id: new Date().getTime().toString(36),
+    title: "",
     formfields: initialFormField,
   };
-  console.log("ADDDING A NEW FORM");
-  saveLocalData([...localForms, newform]);
-  return newform;
+  if (formData) return formData;
+
+  navigate("/form-do-not-exist", { replace: true });
+  return newFormData;
 }
 
-function Form(props: IFormFieldProps) {
-  const { changeStateCB, showResultsCB, initialLoadedData } = props;
+function Form(props: IFormFieldProps): JSX.Element {
+  const { formId } = props;
 
-  const [formField, setFormField] = useState<IFormData>(() => initialFormData(initialLoadedData));
+  const [formField, setFormField] = useState<IFormData>(() => getInitialFormData(formId));
   const [newFieldData, setNewFieldData] = useState<string>("");
 
   const titleRef = useRef<HTMLInputElement>(null);
@@ -77,7 +79,7 @@ function Form(props: IFormFieldProps) {
       formfields: [
         ...formField.formfields,
         {
-          id: Number(new Date()),
+          id: new Date().getTime().toString(36),
           label: newFieldData,
           type: "text",
           value: "",
@@ -88,16 +90,18 @@ function Form(props: IFormFieldProps) {
   }
 
   //! Remove a Field from the Form
-  function removeField(id: number) {
+  function removeField(id: string) {
     setFormField({
       ...formField,
       formfields: formField.formfields.filter((field) => field.id !== id),
     });
   }
 
+  // TODO: Redirect to `/result/:formId` on the click of the `Submit` button
   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    showResultsCB(formField.formfields);
+    // showResultsCB(formField.formfields);
+    navigate(`/result/${formId}`);
   }
 
   //! Clear all the fields from the Form
@@ -113,7 +117,7 @@ function Form(props: IFormFieldProps) {
     });
   }
 
-  function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: number) {
+  function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
     setFormField({
       ...formField,
       formfields: formField.formfields.map((field) => {
@@ -123,7 +127,7 @@ function Form(props: IFormFieldProps) {
     });
   }
 
-  function onClickHandler(id: number) {
+  function onClickHandler(id: string) {
     removeField(id);
   }
 
@@ -177,29 +181,30 @@ function Form(props: IFormFieldProps) {
         </div>
         <div className="flex justify-between w-full mt-5">
           <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
             type="submit"
           >
             Submit ✔
           </button>
-          <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
-            onClick={() => changeStateCB("HOME")}
+          <Link
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
+            // onClick={() => changeStateCB("HOME")}
             type="button"
+            href="/"
           >
             Home 🏠
-          </button>
+          </Link>
         </div>
         <div className="flex justify-between w-full mt-5">
           <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
             onClick={clearFormFields}
             type="button"
           >
             Clear ✖
           </button>
           <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
+            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
             onClick={() => saveFormData(formField)}
             type="button"
           >
