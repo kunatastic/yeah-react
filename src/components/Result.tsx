@@ -1,7 +1,7 @@
 import React from "react";
-import { IFormFields } from "../types/forms";
+import { IFormField } from "../types/forms";
 
-function Result(props: { results: IFormFields[] }) {
+function Result(props: { results: IFormField[] }) {
   const { results } = props;
   return (
     <div>

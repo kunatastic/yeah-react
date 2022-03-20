@@ -1,9 +1,9 @@
 export interface IFormFieldProps {
   closeFormCB: () => void;
-  showResultsCB: (results: IFormFields[]) => void;
+  showResultsCB: (results: IFormField[]) => void;
 }
 
-export interface IFormFields {
+export interface IFormField {
   id: number;
   label: string;
   type: string;
@@ -11,7 +11,13 @@ export interface IFormFields {
 }
 
 export interface IFieldProps {
-  field: IFormFields;
+  field: IFormField;
   onClickHandler: (id: number) => void;
   onChangeHandler: (e: any, id: number) => void;
+}
+
+export interface IFormData {
+  id: number;
+  title: string;
+  formfields: IFormField[];
 }

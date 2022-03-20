@@ -7,7 +7,7 @@ function Fields(props: IFieldProps) {
   return (
     <div className="pt-4">
       <label className="text-gray-900 font-semibold py-2">
-        {id}. {label}-[{value}]
+        {id}. {label} - [{value}]
       </label>
       <div className="flex">
         <input
@@ -18,7 +18,7 @@ function Fields(props: IFieldProps) {
         />
         <button
           className="text-black border-2 border-transparent  hover:border-red-600 w-full bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
-          onClick={(e) => onClickHandler(id)}
+          onClick={() => onClickHandler(id)}
           type="button"
         >
           Remove ❌
