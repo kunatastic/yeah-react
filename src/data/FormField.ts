@@ -1,33 +1,34 @@
-export interface IFormFields {
-  label: string;
-  type: string;
-  data: string;
-}
+import { IFormFields } from "../types/forms";
 
-export const FormFields: IFormFields[] = [
+export const formFields: IFormFields[] = [
   {
+    id: 1,
     label: "First Name",
     type: "text",
-    data: "Kunal",
+    value: "",
   },
   {
+    id: 2,
     label: "Last Name",
     type: "text",
-    data: "Kumar",
+    value: "",
   },
   {
+    id: 3,
     label: "Email",
     type: "email",
-    data: "kunal@kunatastic.me",
+    value: "",
   },
   {
+    id: 4,
     label: "Phone",
     type: "tel",
-    data: "+91-9888888888",
+    value: "",
   },
   {
+    id: 5,
     label: "Date of Birth",
     type: "date",
-    data: "",
+    value: "",
   },
 ];
