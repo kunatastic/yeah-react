@@ -1,6 +1,7 @@
 export interface IFormFieldProps {
-  closeFormCB: () => void;
+  changeStateCB: (state: string) => void;
   showResultsCB: (results: IFormField[]) => void;
+  initialLoadedData: IFormData;
 }
 
 export interface IFormField {

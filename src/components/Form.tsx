@@ -24,30 +24,31 @@ function getLocalForms(): IFormData[] {
 }
 
 //! Get the Form Data from LocalStorage or return default value
-function initialFormData(): IFormData {
+function initialFormData(initialData: IFormData): IFormData {
+  if (initialData) {
+    return initialData;
+  }
   const localForms = getLocalForms();
-  if (localForms.length > 0) return localForms[0];
   const newform: IFormData = {
     id: Number(new Date()),
     title: "Untitled",
     formfields: initialFormField,
   };
+  console.log("ADDDING A NEW FORM");
   saveLocalData([...localForms, newform]);
   return newform;
 }
 
 function Form(props: IFormFieldProps) {
-  const { closeFormCB, showResultsCB } = props;
+  const { changeStateCB, showResultsCB, initialLoadedData } = props;
 
-  const [formField, setFormField] = useState<IFormData>(() => initialFormData());
-  const [id, setId] = useState<number>(formField.formfields.length);
+  const [formField, setFormField] = useState<IFormData>(() => initialFormData(initialLoadedData));
   const [newFieldData, setNewFieldData] = useState<string>("");
 
   const titleRef = useRef<HTMLInputElement>(null);
 
   //! Change the title of document if the Form component is rendered
   useEffect(() => {
-    console.log("UseEffect hook loaded");
     document.title = formField.title;
     titleRef.current?.focus();
 
@@ -76,14 +77,13 @@ function Form(props: IFormFieldProps) {
       formfields: [
         ...formField.formfields,
         {
-          id: id,
+          id: Number(new Date()),
           label: newFieldData,
           type: "text",
           value: "",
         },
       ],
     });
-    setId(id + 1);
     setNewFieldData("");
   }
 
@@ -184,7 +184,7 @@ function Form(props: IFormFieldProps) {
           </button>
           <button
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
-            onClick={closeFormCB}
+            onClick={() => changeStateCB("HOME")}
             type="button"
           >
             Home 🏠
@@ -196,7 +196,7 @@ function Form(props: IFormFieldProps) {
             onClick={clearFormFields}
             type="button"
           >
-            Cancel ✖
+            Clear ✖
           </button>
           <button
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
