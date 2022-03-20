@@ -7,7 +7,7 @@ function Fields(props: IFieldProps) {
   return (
     <div className="pt-4">
       <label className="text-gray-900 font-semibold py-2">
-        {id}. {label} - [{value}]
+        {label} - [{value}]
       </label>
       <div className="flex">
         <input
