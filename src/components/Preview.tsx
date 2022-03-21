@@ -97,7 +97,10 @@ function Preview(props: { formId: string }) {
               : "hover:border-black bg-gray-500 hover:bg-gray-600"
           }`}
           onClick={() => {
-            if (question !== 0) setQuestion(question - 1);
+            if (question !== 0) {
+              saveFormData(formField);
+              setQuestion(question - 1);
+            }
           }}
           type="button"
         >
@@ -111,7 +114,10 @@ function Preview(props: { formId: string }) {
           }`}
           type="button"
           onClick={() => {
-            if (question !== formField.formfields.length - 1) setQuestion(question + 1);
+            if (question !== formField.formfields.length - 1) {
+              saveFormData(formField);
+              setQuestion(question + 1);
+            }
           }}
         >
           Next ▶
