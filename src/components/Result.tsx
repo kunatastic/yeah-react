@@ -1,7 +1,7 @@
 import React from "react";
-import { IFormFields } from "../types/forms";
+import { IFormField } from "../types/forms";
 
-function Result(props: { results: IFormFields[] }) {
+function Result(props: { results: IFormField[] }) {
   const { results } = props;
   return (
     <div>
@@ -12,13 +12,11 @@ function Result(props: { results: IFormFields[] }) {
         const { id, value, label } = result;
 
         return (
-          <div>
-            <div key={index} className="my-2 bg-blue-300 px-5 py-2 hover:bg-blue-400">
-              <span className="font-bold">
-                {id}. {label}
-              </span>{" "}
-              <span>{value}</span>
-            </div>
+          <div key={index} className="my-2 bg-blue-300 px-5 py-2 hover:bg-blue-400">
+            <span className="font-bold">
+              {id}. {label}
+            </span>{" "}
+            <span>{value}</span>
           </div>
         );
       })}

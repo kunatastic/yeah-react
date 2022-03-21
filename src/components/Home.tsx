@@ -2,11 +2,11 @@ import React from "react";
 import logo from "../logo.svg";
 
 interface IHomeProps {
-  openFormCB: () => void;
+  changeStateCB: (state: string) => void;
 }
 
 function Home(props: IHomeProps) {
-  const { openFormCB } = props;
+  const { changeStateCB } = props;
   return (
     <>
       <div className="flex items-center">
@@ -15,9 +15,9 @@ function Home(props: IHomeProps) {
       </div>
       <button
         className="text-white w-full bg-blue-500 mx-2 px-4 py-2 mt-4 rounded-lg hover:bg-blue-600"
-        onClick={openFormCB}
+        onClick={() => changeStateCB("LIST")}
       >
-        Form 👷‍♀️
+        List 📜
       </button>
     </>
   );

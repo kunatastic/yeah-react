@@ -1,6 +1,6 @@
-import { IFormFields } from "../types/forms";
+import { IFormField } from "../types/forms";
 
-export const formFields: IFormFields[] = [
+export const formFields: IFormField[] = [
   {
     id: 1,
     label: "First Name",
