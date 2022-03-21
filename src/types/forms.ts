@@ -11,8 +11,9 @@ export interface IFormField {
 
 export interface IFieldProps {
   field: IFormField;
-  onClickHandler: (id: string) => void;
+  onClickHandler?: (id: string) => void;
   onChangeHandler: (e: any, id: string) => void;
+  preview: boolean;
 }
 
 export interface IFormData {

@@ -1,5 +1,5 @@
 import { Link } from "raviger";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { LOCAL_STORAGE_KEY } from "../config";
 import { IFormData } from "../types/forms";
 
@@ -26,11 +26,11 @@ function Result(props: { formId: string }) {
       <h1 className="text-gray-500">Id. Label and data</h1>
 
       {results.formfields.map((result, index) => {
-        const { id, value, label } = result;
+        const { value, label } = result;
         return (
           <div key={index} className="my-2 bg-blue-300 px-5 py-2 hover:bg-blue-400">
             <span className="font-bold">
-              {id}. {label}
+              {index + 1}. {label}
             </span>{" "}
             <span>{value}</span>
           </div>

@@ -46,12 +46,13 @@ function Form(props: IFormFieldProps): JSX.Element {
 
   const [formField, setFormField] = useState<IFormData>(() => getInitialFormData(formId));
   const [newFieldData, setNewFieldData] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
   const titleRef = useRef<HTMLInputElement>(null);
 
   //! Change the title of document if the Form component is rendered
   useEffect(() => {
-    document.title = formField.title;
+    document.title = formField.title + " Form - Settings";
     titleRef.current?.focus();
 
     //? Cleanup the useEffect hook on unmount of the Form Component
@@ -74,6 +75,10 @@ function Form(props: IFormFieldProps): JSX.Element {
 
   //! Add a new Field to the Form
   function addNewField() {
+    if (newFieldData.length === 0) {
+      setError(true);
+      return;
+    }
     setFormField({
       ...formField,
       formfields: [
@@ -102,19 +107,6 @@ function Form(props: IFormFieldProps): JSX.Element {
     event.preventDefault();
     // showResultsCB(formField.formfields);
     navigate(`/result/${formId}`);
-  }
-
-  //! Clear all the fields from the Form
-  function clearFormFields() {
-    setFormField({
-      ...formField,
-      formfields: formField.formfields.map((field) => {
-        return {
-          ...field,
-          value: "",
-        };
-      }),
-    });
   }
 
   function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
@@ -154,6 +146,7 @@ function Form(props: IFormFieldProps): JSX.Element {
           return (
             <Fields
               key={index}
+              preview={false}
               field={field}
               onChangeHandler={onChangeHandler}
               onClickHandler={onClickHandler}
@@ -162,7 +155,9 @@ function Form(props: IFormFieldProps): JSX.Element {
         })}
 
         <div className="pt-4">
-          <label className="text-gray-900 font-semibold py-2">Add Field</label>
+          <label className="text-gray-900 font-semibold py-2">
+            Add Field {error && <span className="text-red-500">Field cannot be empty</span>}
+          </label>
           <div className="flex">
             <input
               className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
@@ -179,37 +174,23 @@ function Form(props: IFormFieldProps): JSX.Element {
             </button>
           </div>
         </div>
+
         <div className="flex justify-between w-full mt-5">
-          <button
+          <Link
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
-            type="submit"
+            type="button"
+            href={`/result/${formId}`}
           >
-            Submit ✔
-          </button>
+            Result
+          </Link>
           <Link
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
             // onClick={() => changeStateCB("HOME")}
             type="button"
-            href="/"
+            href={`/preview/${formId}`}
           >
-            Home 🏠
+            Preview
           </Link>
-        </div>
-        <div className="flex justify-between w-full mt-5">
-          <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
-            onClick={clearFormFields}
-            type="button"
-          >
-            Clear ✖
-          </button>
-          <button
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
-            onClick={() => saveFormData(formField)}
-            type="button"
-          >
-            Save 💾
-          </button>
         </div>
       </form>
     </>

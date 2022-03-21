@@ -1,9 +1,8 @@
-import { Link, useBasePath } from "raviger";
+import { Link } from "raviger";
 import React from "react";
 import logo from "../logo.svg";
 
 function Header() {
-  let basePath = useBasePath();
   return (
     <>
       <div className="flex gap-2 items-center">
