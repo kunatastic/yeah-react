@@ -1,4 +1,4 @@
-import { Link } from "raviger";
+import { Link, navigate } from "raviger";
 import React, { useState } from "react";
 import { LOCAL_STORAGE_KEY } from "../config";
 import { IFormData } from "../types/forms";
@@ -17,7 +17,13 @@ function Result(props: { formId: string }) {
   function getInitialFormData(formId: string): IFormData {
     const localForms = getLocalForms();
     const formData = localForms.find((form) => form.id === formId);
-    return formData ? formData : ({} as IFormData);
+    if (formData) return formData;
+    navigate("/form-do-not-exist", { replace: true });
+    return {
+      id: new Date().getTime().toString(36),
+      title: "",
+      formfields: [],
+    };
   }
 
   return (
