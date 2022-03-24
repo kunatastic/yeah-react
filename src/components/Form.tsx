@@ -119,6 +119,16 @@ function Form(props: IFormFieldProps): JSX.Element {
     });
   }
 
+  function onChangeLabelHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
+    setFormField({
+      ...formField,
+      formfields: formField.formfields.map((field) => {
+        if (field.id === id) return { ...field, label: e.target.value };
+        return field;
+      }),
+    });
+  }
+
   function onClickHandler(id: string) {
     removeField(id);
   }
@@ -147,9 +157,12 @@ function Form(props: IFormFieldProps): JSX.Element {
             <Fields
               key={index}
               preview={false}
-              field={field}
+              label={field.label}
+              id={field.id}
+              type={field.type}
               onChangeHandler={onChangeHandler}
               onClickHandler={onClickHandler}
+              onLabelChangeHandler={onChangeLabelHandler}
             />
           );
         })}
