@@ -2,32 +2,12 @@ import { Link, navigate } from "raviger";
 import React, { useEffect, useState, useRef } from "react";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData, IFormFieldProps } from "../types/forms";
+import { getLocalForms, saveFormData } from "../util/storage";
 import Fields from "./Fields";
-
-const LOCAL_STORAGE_KEY = "kunal-react-form-data";
-
-//! Save the Form Data to LocalStorage
-function saveFormData(currentState: IFormData) {
-  const localForms = getLocalForms();
-  const updatedLocalForms = localForms.map((form) => {
-    return form.id === currentState.id ? currentState : form;
-  });
-  saveLocalData(updatedLocalForms);
-}
-
-function saveLocalData(currentState: IFormData[]) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentState));
-}
-
-function getLocalForms(): IFormData[] {
-  const stringifiedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
-  return stringifiedFormData ? JSON.parse(stringifiedFormData) : [];
-}
 
 //! Get the Form Data from LocalStorage or return default value
 // TODO: ADD a custom redirect to `/link` if the formId doesn't exist in the LocalStorage
 function getInitialFormData(formId: string): IFormData {
-  console.log("YWSSSS");
   const localForms = getLocalForms();
   const formData = localForms.find((form) => form.id === formId);
   const newFormData = {
@@ -92,6 +72,7 @@ function Form(props: IFormFieldProps): JSX.Element {
       ],
     });
     setNewFieldData("");
+    setError(false);
   }
 
   //! Remove a Field from the Form
@@ -160,7 +141,6 @@ function Form(props: IFormFieldProps): JSX.Element {
               label={field.label}
               id={field.id}
               type={field.type}
-              onChangeHandler={onChangeHandler}
               onClickHandler={onClickHandler}
               onLabelChangeHandler={onChangeLabelHandler}
             />

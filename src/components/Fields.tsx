@@ -31,7 +31,6 @@ function Fields(props: IFieldProps) {
                 <span className="text-blue-700 font-semibold py-2 capitalize">{props.type}</span>)
               </label>
             )}
-
             <div>
               <button
                 className="text-black border-2 border-transparent  hover:border-red-600 bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
@@ -55,27 +54,6 @@ function Fields(props: IFieldProps) {
           </div>
         </>
       )}
-      {/* <div className="flex">
-        {preview && (
-          <input
-            className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-            type={type}
-            onChange={(e) => onChangeHandler(e, id)}
-            value={value}
-          />
-        )}
-        {!preview && (
-          <button
-            className="text-black border-2 border-transparent  hover:border-red-600 w-full bg-gray-200 mx-2 px-4 py-2 rounded-lg hover:bg-gray-300"
-            onClick={() => {
-              if (onClickHandler) onClickHandler(id);
-            }}
-            type="button"
-          >
-            Remove ❌
-          </button>
-        )}
-      </div> */}
     </div>
   );
 }
