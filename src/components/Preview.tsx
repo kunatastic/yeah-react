@@ -1,9 +1,9 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
 import { formFields as initialFormField } from "../data/FormField";
-import { LOCAL_STORAGE_KEY } from "../config";
 import { IFormData } from "../types/forms";
 import Fields from "./Fields";
+import { getLocalForms, saveFormData } from "../util/storage";
 
 function Preview(props: { formId: string }) {
   const { formId } = props;
@@ -33,11 +33,6 @@ function Preview(props: { formId: string }) {
     setQuery({ questionId: question });
   }, [question]);
 
-  function getLocalForms(): IFormData[] {
-    const stringifiedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return stringifiedFormData ? JSON.parse(stringifiedFormData) : [];
-  }
-
   function getInitialData(formId: string): IFormData {
     const localForms = getLocalForms();
     const formData = localForms.find((form) => form.id === formId);
@@ -60,18 +55,6 @@ function Preview(props: { formId: string }) {
         return field;
       }),
     });
-  }
-
-  function saveFormData(currentState: IFormData) {
-    const localForms = getLocalForms();
-    const updatedLocalForms = localForms.map((form) => {
-      return form.id === currentState.id ? currentState : form;
-    });
-    saveLocalData(updatedLocalForms);
-  }
-
-  function saveLocalData(currentState: IFormData[]) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentState));
   }
 
   function handleSaveAndResult() {

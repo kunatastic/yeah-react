@@ -9,13 +9,6 @@ export interface IFormField {
   value: string;
 }
 
-// export interface IFieldProps {
-//   field: IFormField;
-//   onClickHandler?: (id: string) => void;
-//   onChangeHandler: (e: any, id: string) => void;
-//   preview: boolean;
-// }
-
 export interface IFormData {
   id: string;
   title: string;
@@ -24,21 +17,45 @@ export interface IFormData {
 
 type editFieldProps = {
   preview: false;
-  label: string;
-  onClickHandler: (id: string) => void;
-  onLabelChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   id: string;
   type: string;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+  label: string;
+  // field: InputFormField;
+  onClickHandler: (id: string) => void;
+  onLabelChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
 };
 
 type previewFieldProps = {
   preview: true;
-  label: string;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   id: string;
-  value: string;
   type: string;
+  label: string;
+  value: string;
+  // field: InputFormField;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
 };
 
 export type IFieldProps = editFieldProps | previewFieldProps;
+
+type textFieldType = "text" | "email" | "number" | "password" | "tel";
+
+type TextField = {
+  type: textFieldType;
+  kind: "text";
+  id: string;
+  value: string;
+  label: string;
+};
+
+type dropdownFieldType = "single" | "multiple" | "radio" | "checkbox";
+
+type DropDownField = {
+  type: dropdownFieldType;
+  kind: "dropdown";
+  id: string;
+  value: string;
+  label: string;
+  options: string[];
+};
+
+export type InputFormField = TextField | DropDownField;
