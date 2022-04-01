@@ -36,22 +36,23 @@ function Preview(props: { formId: string }) {
   function getInitialData(formId: string): IFormData {
     const localForms = getLocalForms();
     const formData = localForms.find((form) => form.id === formId);
-    const newFormData = {
-      id: new Date().getTime().toString(36),
-      title: "",
-      formfields: initialFormField,
-    };
     if (formData) return formData;
-
     navigate("/form-do-not-exist", { replace: true });
-    return newFormData;
+    return {} as never;
   }
 
-  function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
+  // NOTE: any was used to encounter any future feature addition to the formFields values data type
+  function onChangeHandler(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    id: string,
+    data?: any
+  ) {
+    if (data === undefined) data = e.target.value;
+    console.log("adding data: ", data);
     setFormField({
       ...formField,
       formfields: formField.formfields.map((field) => {
-        if (field.id === id) return { ...field, value: e.target.value };
+        if (field.id === id) return { ...field, value: data };
         return field;
       }),
     });
@@ -110,14 +111,18 @@ function Preview(props: { formId: string }) {
               Next ▶
             </button>
           </div>
+
           <Fields
             preview={true}
-            label={formField.formfields[question].label}
-            type={formField.formfields[question].type}
-            value={formField.formfields[question].value}
-            id={formField.formfields[question].id}
+            field={formField.formfields[question]}
             onChangeHandler={onChangeHandler}
           />
+
+          {/* {formField.formfields.map((field, index) => {
+            return (
+              <Fields key={index} preview={true} field={field} onChangeHandler={onChangeHandler} />
+            );
+          })} */}
         </>
       )}
 

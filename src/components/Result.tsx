@@ -33,7 +33,7 @@ function Result(props: { formId: string }) {
             <span className="font-bold">
               {index + 1}. {label}
             </span>{" "}
-            <span>{value}</span>
+            <span>{typeof value === "object" ? value.join(", ") : value}</span>
           </div>
         );
       })}
