@@ -2,60 +2,80 @@ export interface IFormFieldProps {
   formId: string;
 }
 
-export interface IFormField {
-  id: string;
-  label: string;
-  type: string;
-  value: string;
-}
-
 export interface IFormData {
   id: string;
   title: string;
-  formfields: IFormField[];
+  formfields: InputFormField[];
 }
 
 type editFieldProps = {
   preview: false;
-  id: string;
-  type: string;
-  label: string;
-  // field: InputFormField;
+  field: InputFormField;
   onClickHandler: (id: string) => void;
   onLabelChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
 };
 
 type previewFieldProps = {
   preview: true;
-  id: string;
-  type: string;
-  label: string;
-  value: string;
-  // field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+  field: InputFormField;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: string) => void;
 };
 
 export type IFieldProps = editFieldProps | previewFieldProps;
 
 type textFieldType = "text" | "email" | "number" | "password" | "tel";
-
 type TextField = {
-  type: textFieldType;
   kind: "text";
+  type: textFieldType;
   id: string;
   value: string;
   label: string;
 };
 
-type dropdownFieldType = "single" | "multiple" | "radio" | "checkbox";
-
+type dropdownFieldType = "single" | "radio";
 type DropDownField = {
-  type: dropdownFieldType;
   kind: "dropdown";
+  type: dropdownFieldType;
   id: string;
   value: string;
   label: string;
   options: string[];
 };
 
-export type InputFormField = TextField | DropDownField;
+type multiSelectFieldType = "multiple" | "checkbox";
+type MultiSelectField = {
+  kind: "multiselect";
+  type: multiSelectFieldType;
+  id: string;
+  value: string[];
+  label: string;
+  options: string[];
+};
+
+export type InputFormField = TextField | DropDownField | MultiSelectField;
+
+type textInputTypes = {
+  kind: "text";
+  fieldType: textFieldType;
+};
+
+type dropDownInputTypes = {
+  kind: "dropdown";
+  fieldType: dropdownFieldType;
+};
+
+type multiSelectInputTypes = {
+  kind: "multiselect";
+  fieldType: multiSelectFieldType;
+};
+
+type nullInputTypes = {
+  kind: "null";
+  fieldType: "null";
+};
+
+export type inputTypes =
+  | textInputTypes
+  | dropDownInputTypes
+  | multiSelectInputTypes
+  | nullInputTypes;
