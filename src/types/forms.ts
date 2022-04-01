@@ -1,24 +1,44 @@
 export interface IFormFieldProps {
-  changeStateCB: (state: string) => void;
-  showResultsCB: (results: IFormField[]) => void;
-  initialLoadedData: IFormData;
+  formId: string;
 }
 
 export interface IFormField {
-  id: number;
+  id: string;
   label: string;
   type: string;
   value: string;
 }
 
-export interface IFieldProps {
-  field: IFormField;
-  onClickHandler: (id: number) => void;
-  onChangeHandler: (e: any, id: number) => void;
-}
+// export interface IFieldProps {
+//   field: IFormField;
+//   onClickHandler?: (id: string) => void;
+//   onChangeHandler: (e: any, id: string) => void;
+//   preview: boolean;
+// }
 
 export interface IFormData {
-  id: number;
+  id: string;
   title: string;
   formfields: IFormField[];
 }
+
+type editFieldProps = {
+  preview: false;
+  label: string;
+  onClickHandler: (id: string) => void;
+  onLabelChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+  id: string;
+  type: string;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+};
+
+type previewFieldProps = {
+  preview: true;
+  label: string;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+  id: string;
+  value: string;
+  type: string;
+};
+
+export type IFieldProps = editFieldProps | previewFieldProps;
