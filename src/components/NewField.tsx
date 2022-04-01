@@ -118,10 +118,10 @@ function NewField(props: INewFieldProps) {
             className="w-full px-4 py-2 bg-whiteborder-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
           >
             <option value="null">Select a type</option>
-            {formFieldOptions.map((field) => (
-              <optgroup label={field.groupName}>
-                {field.inputOptions.map((option) => (
-                  <option value={option.fieldType} className="capitalize">
+            {formFieldOptions.map((field, index) => (
+              <optgroup label={field.groupName} key={index}>
+                {field.inputOptions.map((option, index) => (
+                  <option value={option.fieldType} key={index} className="capitalize">
                     {option.fieldType}
                   </option>
                 ))}

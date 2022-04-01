@@ -12,7 +12,7 @@ function Radio(props: {
         <br />
         {props.field.options.map((option, index) => {
           return (
-            <>
+            <React.Fragment key={index}>
               <input
                 type={props.field.type}
                 id={option}
@@ -23,7 +23,7 @@ function Radio(props: {
               />
               <label> {option}</label>
               <br />
-            </>
+            </React.Fragment>
           );
         })}
       </>

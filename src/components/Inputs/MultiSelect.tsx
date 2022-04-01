@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputFormField } from "../../types/forms";
 
 function MultiSelect(props: {
   field: InputFormField;
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string, data: string[]) => void;
 }) {
-  const [selectedItems, setSelectedItems] = useState<string[]>(props.field.value as string[]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (props.field.kind === "multiselect") setSelectedItems(props.field.value);
+  }, [props.field.kind, props.field.value]);
 
   async function handleDropDownClick(value: string) {
     let changeData = [...selectedItems];
@@ -23,6 +27,7 @@ function MultiSelect(props: {
   if (props.field.kind === "multiselect" && props.field.type === "multiple")
     return (
       <>
+        {console.log("WOWOW: ", props.field.value, selectedItems)}
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
         <h1 className="font-xl my-2 flex justify-between items-center">
