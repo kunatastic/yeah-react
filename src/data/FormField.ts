@@ -73,6 +73,7 @@ export const formFieldOptions: {
       { kind: "text", fieldType: "text" },
       { kind: "text", fieldType: "email" },
       { kind: "text", fieldType: "tel" },
+      { kind: "text", fieldType: "number" },
     ],
   },
   {
