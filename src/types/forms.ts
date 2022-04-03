@@ -5,6 +5,7 @@ export interface IFormFieldProps {
 export interface IFormData {
   id: string;
   title: string;
+  color: string;
   formfields: InputFormField[];
 }
 
@@ -23,7 +24,16 @@ type previewFieldProps = {
 
 export type IFieldProps = editFieldProps | previewFieldProps;
 
-type textFieldType = "text" | "email" | "number" | "password" | "tel";
+type textFieldType =
+  | "text"
+  | "email"
+  | "number"
+  | "password"
+  | "tel"
+  | "color"
+  | "date"
+  | "datetime-local";
+
 type TextField = {
   kind: "text";
   type: textFieldType;

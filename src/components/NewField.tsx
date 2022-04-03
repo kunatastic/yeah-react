@@ -97,7 +97,6 @@ function NewField(props: INewFieldProps) {
     <div className="mt-4 p-4 rounded-xl bg-blue-200">
       <div className="grid grid-cols-3 gap-2 align-bottom">
         <div className="col-start-1 col-span-2">
-          {}
           <label className=" text-gray-900 font-semibold py-2">
             Add Field {error.error1 && <span className="text-red-500">Field cannot be empty</span>}
           </label>
@@ -165,7 +164,10 @@ function NewField(props: INewFieldProps) {
                 </>
               ) : (
                 dropDownOptions.map((option, index) => (
-                  <div className="capitalize bg-blue-700 text-white rounded-full mx-4 my-2 py-1 px-3">
+                  <div
+                    key={index}
+                    className="capitalize bg-blue-700 text-white rounded-full mx-4 my-2 py-1 px-3"
+                  >
                     {option}{" "}
                     <button
                       onClick={() => {

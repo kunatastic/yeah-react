@@ -14,11 +14,7 @@ function Result(props: { formId: string }) {
     const formData = localForms.find((form) => form.id === formId);
     if (formData) return formData;
     navigate("/form-do-not-exist", { replace: true });
-    return {
-      id: new Date().getTime().toString(36),
-      title: "",
-      formfields: [],
-    };
+    return {} as never;
   }
 
   return (

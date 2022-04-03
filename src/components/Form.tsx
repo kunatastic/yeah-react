@@ -11,15 +11,10 @@ import NewField from "./NewField";
 function getInitialFormData(formId: string): IFormData {
   const localForms = getLocalForms();
   const formData = localForms.find((form) => form.id === formId);
-  const newFormData = {
-    id: new Date().getTime().toString(36),
-    title: "",
-    formfields: initialFormField,
-  };
   if (formData) return formData;
 
   navigate("/form-do-not-exist", { replace: true });
-  return newFormData;
+  return {} as never;
 }
 
 function Form(props: IFormFieldProps): JSX.Element {
@@ -93,20 +88,37 @@ function Form(props: IFormFieldProps): JSX.Element {
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-        <div className="flex gap-2 bg-blue-200 py-2 px-4 rounded-xl">
-          <label className="text-gray-900 font-semibold py-2">Form Name: </label>
-          <input
-            className="w-full px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-            type="text"
-            onChange={(e) =>
-              setFormField({
-                ...formField,
-                title: e.target.value,
-              })
-            }
-            ref={titleRef}
-            value={formField.title}
-          />
+        <div className="bg-blue-200 py-2 px-4 rounded-xl">
+          <div className="flex gap-2 py-2">
+            <label className="text-gray-900 font-semibold py-2">Form Name: </label>
+            <input
+              className="w-full px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+              type="text"
+              onChange={(e) =>
+                setFormField({
+                  ...formField,
+                  title: e.target.value,
+                })
+              }
+              ref={titleRef}
+              value={formField.title}
+            />
+          </div>
+          <div className="flex gap-2 py-2">
+            <label className="text-gray-900 font-semibold py-2">Form color: </label>
+            <input
+              className="h-10 w-24 px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+              type="color"
+              onChange={(e) =>
+                setFormField({
+                  ...formField,
+                  color: e.target.value,
+                })
+              }
+              value={formField.color}
+              // value="#"
+            />
+          </div>
         </div>
 
         {formField.formfields.map((field, index) => {

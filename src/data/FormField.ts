@@ -74,6 +74,9 @@ export const formFieldOptions: {
       { kind: "text", fieldType: "email" },
       { kind: "text", fieldType: "tel" },
       { kind: "text", fieldType: "number" },
+      { kind: "text", fieldType: "color" },
+      { kind: "text", fieldType: "date" },
+      { kind: "text", fieldType: "datetime-local" },
     ],
   },
   {
