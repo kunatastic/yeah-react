@@ -63,31 +63,28 @@ export const formFields: InputFormField[] = [
   },
 ];
 
-export const formFieldOptions: {
-  groupName: string;
-  inputOptions: inputTypes[];
-}[] = [
+export const formFieldOptions: { groupName: string; inputOptions: inputTypes[] }[] = [
   {
     groupName: "Text",
     inputOptions: [
-      { kind: "text", fieldType: "text" },
-      { kind: "text", fieldType: "email" },
-      { kind: "text", fieldType: "tel" },
-      { kind: "text", fieldType: "number" },
+      { kind: "text", fieldType: "text", label: "" },
+      { kind: "text", fieldType: "email", label: "" },
+      { kind: "text", fieldType: "tel", label: "" },
+      { kind: "text", fieldType: "number", label: "" },
     ],
   },
   {
     groupName: "Dropdown",
     inputOptions: [
-      { kind: "dropdown", fieldType: "single" },
-      { kind: "multiselect", fieldType: "multiple" },
+      { kind: "dropdown", fieldType: "single", label: "", options: [] },
+      { kind: "multiselect", fieldType: "multiple", label: "", options: [] },
     ],
   },
   {
     groupName: "Radio",
     inputOptions: [
-      { kind: "dropdown", fieldType: "radio" },
-      { kind: "multiselect", fieldType: "checkbox" },
+      { kind: "dropdown", fieldType: "radio", label: "", options: [] },
+      { kind: "multiselect", fieldType: "checkbox", label: "", options: [] },
     ],
   },
 ];

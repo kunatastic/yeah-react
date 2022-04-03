@@ -57,21 +57,28 @@ export type InputFormField = TextField | DropDownField | MultiSelectField;
 type textInputTypes = {
   kind: "text";
   fieldType: textFieldType;
+  label: string;
 };
 
 type dropDownInputTypes = {
   kind: "dropdown";
   fieldType: dropdownFieldType;
+  label: string;
+  options: string[];
 };
 
 type multiSelectInputTypes = {
   kind: "multiselect";
   fieldType: multiSelectFieldType;
+  label: string;
+  options: string[];
 };
 
 type nullInputTypes = {
   kind: "null";
   fieldType: "null";
+  label: string;
+  options?: string[];
 };
 
 export type inputTypes =

@@ -66,16 +66,6 @@ function Form(props: IFormFieldProps): JSX.Element {
     navigate(`/result/${formId}`);
   }
 
-  // function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
-  //   setFormField({
-  //     ...formField,
-  //     formfields: formField.formfields.map((field) => {
-  //       if (field.id === id) return { ...field, value: e.target.value };
-  //       return field;
-  //     }),
-  //   });
-  // }
-
   function onChangeLabelHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
     setFormField({
       ...formField,
@@ -89,6 +79,18 @@ function Form(props: IFormFieldProps): JSX.Element {
   function onClickHandler(id: string) {
     removeField(id);
   }
+
+  // Action - Reducer
+  // const reducer = (state, action) => {
+  //   switch (action.type) {
+  //     case "ADD_FIELD":
+  //       const newField =
+  //       return {
+  //         ...state,
+  //         formfields: [...state.formfields, action.payload],
+  //       };
+  //   }
+  // };
 
   return (
     <>
