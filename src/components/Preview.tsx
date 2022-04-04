@@ -66,7 +66,7 @@ function Preview(props: { formId: string }) {
   return (
     <>
       <div
-        style={{ backgroundColor: formField.color + "50" }}
+        style={{ backgroundColor: formField.color + "aa" }}
         className="p-5 rounded-xl shadow-inner"
       >
         {formField.formfields.length === 0 ? (
@@ -101,8 +101,8 @@ function Preview(props: { formId: string }) {
               </button>
               <button
                 className={`text-white w-32 mx-2 px-4 py-2 text-center rounded-lg border-2 border-transparent ${
-                  question === formField.formfields.length
-                    ? "bg-gray-300 cursor-not-allowed"
+                  question + 1 === formField.formfields.length
+                    ? "hover:border-black bg-blue-500 hover:bg-blue-600"
                     : "hover:border-black bg-gray-500 hover:bg-gray-600"
                 }`}
                 type="button"
@@ -112,10 +112,12 @@ function Preview(props: { formId: string }) {
                   }
                 }}
               >
-                Next ▶
+                {formField.formfields.length === question + 1 ? "Submit ▶" : "Next ▶"}
               </button>
             </div>
-
+            <p className="text-center font-semibold py-4">
+              {question + 1} out of {formField.formfields.length} Questions
+            </p>
             <Fields
               preview={true}
               field={formField.formfields[question]}
