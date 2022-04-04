@@ -80,7 +80,7 @@ function List() {
               <div
                 key={index}
                 className="max-w-xl p-4 rounded-md shadow-xl hover:shadow-md"
-                style={{ backgroundColor: form.color ? form.color + "50" : "rgb(219 234 254)" }}
+                style={{ backgroundColor: form.color ? form.color + "aa" : "rgb(219 234 254)" }}
               >
                 <h1 className="text-xl font-semibold">
                   {index + 1}.) {form.title}
