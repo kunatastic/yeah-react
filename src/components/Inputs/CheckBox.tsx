@@ -15,11 +15,8 @@ function CheckBox(props: {
     const isChecked = event.target.checked;
     const value = event.target.value;
     let changeData = [...selectedItems];
-    if (isChecked) {
-      changeData.push(value);
-    } else {
-      changeData = changeData.filter((item) => item !== value);
-    }
+    if (isChecked) changeData.push(value);
+    else changeData = changeData.filter((item) => item !== value);
     props.onChangeHandler(event, props.field.id, changeData);
     setSelectedItems(changeData);
   }

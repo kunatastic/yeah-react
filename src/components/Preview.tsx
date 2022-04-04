@@ -1,20 +1,17 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { formFields as initialFormField } from "../data/FormField";
-import { IFormData } from "../types/forms";
 import Fields from "./Fields";
-import { getLocalForms, saveFormData } from "../util/storage";
+import { getInitialFormData, saveFormData } from "../util/storage";
 
 function Preview(props: { formId: string }) {
   const { formId } = props;
   const [{ questionId }, setQuery] = useQueryParams();
-  const [formField, setFormField] = useState(() => getInitialData(formId));
+  const [formField, setFormField] = useState(() => getInitialFormData(formId));
   const [question, setQuestion] = useState(0);
 
   //! Change the title of document if the Form component is rendered
   useEffect(() => {
     document.title = formField.title + " Form - Preview";
-
     //? Cleanup the useEffect hook on unmount of the Form Component
     return () => {
       document.title = "React App";
@@ -22,24 +19,15 @@ function Preview(props: { formId: string }) {
   }, [formField.title]);
 
   useEffect(() => {
-    if (questionId) {
-      setQuestion(Number(questionId));
-    } else {
-      setQuery({ questionId: 0 });
-    }
+    if (questionId) setQuestion(Number(questionId));
+    else setQuery({ questionId: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setQuery({ questionId: question });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
-
-  function getInitialData(formId: string): IFormData {
-    const localForms = getLocalForms();
-    const formData = localForms.find((form) => form.id === formId);
-    if (formData) return formData;
-    navigate("/form-do-not-exist", { replace: true });
-    return {} as never;
-  }
 
   // NOTE: any was used to encounter any future feature addition to the formFields values data type
   function onChangeHandler(
@@ -91,9 +79,7 @@ function Preview(props: { formId: string }) {
                     : "hover:border-black bg-gray-500 hover:bg-gray-600"
                 }`}
                 onClick={() => {
-                  if (question !== 0) {
-                    setQuestion(question - 1);
-                  }
+                  if (question !== 0) setQuestion(question - 1);
                 }}
                 type="button"
               >
@@ -107,9 +93,7 @@ function Preview(props: { formId: string }) {
                 }`}
                 type="button"
                 onClick={() => {
-                  if (question !== formField.formfields.length) {
-                    setQuestion(question + 1);
-                  }
+                  if (question !== formField.formfields.length) setQuestion(question + 1);
                 }}
               >
                 {formField.formfields.length === question + 1 ? "Submit ▶" : "Next ▶"}

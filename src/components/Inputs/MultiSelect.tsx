@@ -5,6 +5,7 @@ function MultiSelect(props: {
   field: InputFormField;
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string, data: string[]) => void;
 }) {
+  const [showDropDown, setShowDropDown] = useState<Boolean>(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
@@ -13,16 +14,11 @@ function MultiSelect(props: {
 
   async function handleDropDownClick(value: string) {
     let changeData = [...selectedItems];
-    if (changeData.includes(value)) {
-      changeData = changeData.filter((item) => item !== value);
-    } else {
-      changeData.push(value);
-    }
+    if (changeData.includes(value)) changeData = changeData.filter((item) => item !== value);
+    else changeData.push(value);
     props.onChangeHandler({} as never, props.field.id, changeData);
     setSelectedItems(changeData);
   }
-
-  const [showDropDown, setShowDropDown] = useState<Boolean>(false);
 
   if (props.field.kind === "multiselect" && props.field.type === "multiple")
     return (
