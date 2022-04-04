@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { formFieldOptions } from "../data/FormField";
-import { IFormData, InputFormField, inputTypes } from "../types/forms";
-import { createNewFormField } from "../util/action-reducer";
+import { FormActions } from "../types/actions-reducer";
+import { IFormData, inputTypes } from "../types/forms";
 interface INewFieldProps {
   formField: IFormData;
-  setFormField: React.Dispatch<React.SetStateAction<IFormData>>;
+  dispatchFormAction: (action: FormActions) => void;
 }
 
 function NewField(props: INewFieldProps) {
-  const { setFormField, formField } = props;
+  const { dispatchFormAction } = props;
 
   const [error, setError] = useState<{ [key: string]: boolean }>({
     error1: false,
@@ -27,23 +27,17 @@ function NewField(props: INewFieldProps) {
     if (fieldType.label.length === 0) {
       setError({ ...error, error1: true });
       return;
-    }
-    if (fieldType.kind === "null") {
+    } else if (fieldType.kind === "null") {
       setError({ ...error, error2: true });
       return;
-    }
-    if (
+    } else if (
       (fieldType.kind === "dropdown" || fieldType.kind === "multiselect") &&
       fieldType.options.length === 0
     ) {
       setError({ ...error, error3: true });
       return;
     }
-
-    setFormField({
-      ...formField,
-      formfields: [...formField.formfields, createNewFormField(fieldType)],
-    });
+    dispatchFormAction({ type: "ADD_FIELD", fieldType: fieldType });
     setError({ ...error, error1: false, error2: false, error3: false });
     setFieldType({ kind: "null", fieldType: "null", label: "" });
   }
@@ -52,11 +46,10 @@ function NewField(props: INewFieldProps) {
     formFieldOptions.forEach((field) => {
       field.inputOptions.forEach((option) => {
         if (option.fieldType === e.target.value) {
-          setFieldType(option);
+          setFieldType({ ...option, label: fieldType.label });
         }
       });
     });
-    // console.log(e.target.value);
   }
 
   return (

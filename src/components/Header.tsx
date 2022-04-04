@@ -9,18 +9,9 @@ function Header() {
         <img src={logo} alt="logo" className="w-32 h-32 animate-spin" />
         <div className="flex gap-2 items-center">
           {[
-            {
-              label: "Home",
-              route: "/",
-            },
-            {
-              label: "List",
-              route: "/list",
-            },
-            {
-              label: "About",
-              route: "/about",
-            },
+            { label: "Home", route: "/" },
+            { label: "List", route: "/list" },
+            { label: "About", route: "/about" },
           ].map((item, index) => (
             <Link
               href={item.route}

@@ -123,12 +123,6 @@ function Preview(props: { formId: string }) {
               field={formField.formfields[question]}
               onChangeHandler={onChangeHandler}
             />
-
-            {/* {formField.formfields.map((field, index) => {
-            return (
-              <Fields key={index} preview={true} field={field} onChangeHandler={onChangeHandler} />
-            );
-          })} */}
           </>
         )}
 
