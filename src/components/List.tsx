@@ -1,6 +1,5 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { LOCAL_STORAGE_KEY } from "../config";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData } from "../types/forms";
 import { getLocalForms, saveLocalData } from "../util/storage";
