@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { InputFormField } from "../../types/forms";
+import { InputFormProps } from "../../types/forms";
 
-function MultiSelect(props: {
-  field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string, data: string[]) => void;
-}) {
+function MultiSelect(props: InputFormProps) {
   const [showDropDown, setShowDropDown] = useState<Boolean>(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -16,14 +13,14 @@ function MultiSelect(props: {
     let changeData = [...selectedItems];
     if (changeData.includes(value)) changeData = changeData.filter((item) => item !== value);
     else changeData.push(value);
-    props.onChangeHandler({} as never, props.field.id, changeData);
+
+    props.onChangeHandler(changeData, props.field.id, props.field.kind);
     setSelectedItems(changeData);
   }
 
   if (props.field.kind === "multiselect" && props.field.type === "multiple")
     return (
       <>
-        {console.log("WOWOW: ", props.field.value, selectedItems)}
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
         <h1 className="font-xl my-2 flex justify-between items-center">

@@ -1,12 +1,16 @@
 import { Link, navigate, useQueryParams } from "raviger";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Fields from "./Fields";
 import { getInitialFormData, saveFormData } from "../util/storage";
+import { PreviewFormReducer } from "../util/action-reducer";
+import { BG_COLOR_OPACITY } from "../config";
 
 function Preview(props: { formId: string }) {
   const { formId } = props;
   const [{ questionId }, setQuery] = useQueryParams();
-  const [formField, setFormField] = useState(() => getInitialFormData(formId));
+  const [formField, dispatch] = useReducer(PreviewFormReducer, null, () =>
+    getInitialFormData(formId)
+  );
   const [question, setQuestion] = useState(0);
 
   //! Change the title of document if the Form component is rendered
@@ -29,21 +33,16 @@ function Preview(props: { formId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
-  // NOTE: any was used to encounter any future feature addition to the formFields values data type
   function onChangeHandler(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    value: string[] | string,
     id: string,
-    data?: any
+    kind: "text" | "dropdown" | "multiselect"
   ) {
-    if (data === undefined) data = e.target.value;
-    console.log("adding data: ", data);
-    setFormField({
-      ...formField,
-      formfields: formField.formfields.map((field) => {
-        if (field.id === id) return { ...field, value: data };
-        return field;
-      }),
-    });
+    if (kind === "multiselect") {
+      dispatch({ type: "UPDATE_FORM_VALUE_MULTIPLE", id: id, value: value as string[] });
+    } else if (kind === "dropdown" || kind === "text") {
+      dispatch({ type: "UPDATE_FORM_VALUE_SINGLE", id: id, value: value as string });
+    }
   }
 
   function handleSaveAndResult() {
@@ -54,7 +53,7 @@ function Preview(props: { formId: string }) {
   return (
     <>
       <div
-        style={{ backgroundColor: formField.color + "aa" }}
+        style={{ backgroundColor: formField.color + BG_COLOR_OPACITY }}
         className="p-5 rounded-xl shadow-inner"
       >
         {formField.formfields.length === 0 ? (

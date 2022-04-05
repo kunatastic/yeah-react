@@ -29,7 +29,7 @@ function Fields(props: IFieldProps) {
               <input
                 className="px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
                 type="text"
-                onChange={(e) => props.onLabelChangeHandler(e, props.field.id)}
+                onChange={(e) => props.onLabelChangeHandler(e.target.value, props.field.id)}
                 value={props.field.label}
               />
             ) : (

@@ -13,13 +13,17 @@ type editFieldProps = {
   preview: false;
   field: InputFormField;
   onClickHandler: (id: string) => void;
-  onLabelChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+  onLabelChangeHandler: (label: string, id: string) => void;
 };
 
 type previewFieldProps = {
   preview: true;
   field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: string) => void;
+  onChangeHandler: (
+    value: string | string[],
+    id: string,
+    kind: "text" | "dropdown" | "multiselect"
+  ) => void;
 };
 
 export type IFieldProps = editFieldProps | previewFieldProps;
@@ -96,3 +100,12 @@ export type inputTypes =
   | dropDownInputTypes
   | multiSelectInputTypes
   | nullInputTypes;
+
+export type InputFormProps = {
+  onChangeHandler: (
+    value: string | string[],
+    id: string,
+    kind: "text" | "dropdown" | "multiselect"
+  ) => void;
+  field: InputFormField;
+};

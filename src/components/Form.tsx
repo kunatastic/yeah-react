@@ -1,8 +1,7 @@
 import { Link } from "raviger";
-import React, { useEffect, useState, useRef } from "react";
-import { FormActions } from "../types/actions-reducer";
-import { IFormData, IFormFieldProps } from "../types/forms";
-import { reducer } from "../util/action-reducer";
+import React, { useEffect, useRef, useReducer } from "react";
+import { IFormFieldProps } from "../types/forms";
+import { EditFormReducer } from "../util/action-reducer";
 import { getInitialFormData, saveFormData } from "../util/storage";
 import Fields from "./Fields";
 import NewField from "./NewField";
@@ -10,7 +9,7 @@ import NewField from "./NewField";
 function Form(props: IFormFieldProps): JSX.Element {
   const { formId } = props;
 
-  const [formField, setFormField] = useState<IFormData>(() => getInitialFormData(formId));
+  const [formField, dispatch] = useReducer(EditFormReducer, null, () => getInitialFormData(formId));
   const titleRef = useRef<HTMLInputElement>(null);
 
   //! Change the title of document if the Form component is rendered
@@ -28,18 +27,8 @@ function Form(props: IFormFieldProps): JSX.Element {
     return () => clearTimeout(timeout);
   }, [formField]);
 
-  function dispatchAction(action: FormActions) {
-    setFormField((prevState) => reducer(prevState, action));
-  }
-
-  function onChangeLabelHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
-    setFormField({
-      ...formField,
-      formfields: formField.formfields.map((field) => {
-        if (field.id === id) return { ...field, label: e.target.value };
-        return field;
-      }),
-    });
+  function onChangeLabelHandler(label: string, id: string) {
+    dispatch({ type: "UPDATE_FORM_LABEL", id: id, label: label });
   }
 
   return (
@@ -51,7 +40,7 @@ function Form(props: IFormFieldProps): JSX.Element {
             <input
               className="w-full px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
               type="text"
-              onChange={(e) => setFormField({ ...formField, title: e.target.value })}
+              onChange={(e) => dispatch({ type: "UPDATE_FORM_TITLE", title: e.target.value })}
               ref={titleRef}
               value={formField.title}
             />
@@ -61,7 +50,9 @@ function Form(props: IFormFieldProps): JSX.Element {
             <input
               className="h-10 w-24 px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
               type="color"
-              onChange={(e) => setFormField({ ...formField, color: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "UPDATE_FORM_AMBIANCE_COLOR", color: e.target.value })
+              }
               value={formField.color}
             />
           </div>
@@ -73,13 +64,13 @@ function Form(props: IFormFieldProps): JSX.Element {
               key={index}
               preview={false}
               field={field}
-              onClickHandler={(_) => dispatchAction({ type: "REMOVE_FIELD", id: field.id })}
+              onClickHandler={(_) => dispatch({ type: "REMOVE_FORM_FIELD", id: field.id })}
               onLabelChangeHandler={onChangeLabelHandler}
             />
           );
         })}
 
-        <NewField formField={formField} dispatchFormAction={dispatchAction} />
+        <NewField formField={formField} dispatchFormAction={dispatch} />
         <div className="flex justify-between w-full mt-5">
           <Link
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { formFieldOptions } from "../data/FormField";
-import { FormActions } from "../types/actions-reducer";
+import { FormEditActions } from "../types/actions-reducer";
 import { IFormData, inputTypes } from "../types/forms";
 interface INewFieldProps {
   formField: IFormData;
-  dispatchFormAction: (action: FormActions) => void;
+  dispatchFormAction: (action: FormEditActions) => void;
 }
 
 function NewField(props: INewFieldProps) {
@@ -37,7 +37,7 @@ function NewField(props: INewFieldProps) {
       setError({ ...error, error3: true });
       return;
     }
-    dispatchFormAction({ type: "ADD_FIELD", fieldType: fieldType });
+    dispatchFormAction({ type: "ADD_FORM_FIELD", fieldType: fieldType });
     setError({ ...error, error1: false, error2: false, error3: false });
     setFieldType({ kind: "null", fieldType: "null", label: "" });
   }
@@ -56,7 +56,7 @@ function NewField(props: INewFieldProps) {
     <div className="mt-4 p-4 rounded-xl bg-blue-200">
       <div className="grid grid-cols-3 gap-2 align-bottom">
         <div className="col-start-1 col-span-2">
-          <label className=" text-gray-900 font-semibold py-2">
+          <label className="text-gray-900 font-semibold py-2">
             Add Field {error.error1 && <span className="text-red-500">Field cannot be empty</span>}
           </label>
           <input
@@ -147,7 +147,7 @@ function NewField(props: INewFieldProps) {
         </>
       )}
       <button
-        className="text-white w-full bg-gray-500 px-4 py-2 border-2 border-transparent  hover:border-green-500 mt-5 rounded-lg hover:bg-gray-600"
+        className="text-white w-full bg-gray-500 px-4 py-2 border-2 border-transparent hover:border-green-500 mt-5 rounded-lg hover:bg-gray-600"
         onClick={addNewField}
         type="button"
       >

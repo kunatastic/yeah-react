@@ -23,7 +23,6 @@ function SearchBox(props: {
   if (props.field.kind === "multiselect" && props.field.type === "multiple")
     return (
       <>
-        {console.log("WOWOW: ", props.field.value, selectedItems)}
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
         <h1 className="font-xl my-2 flex justify-between items-center">
