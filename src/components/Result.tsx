@@ -5,7 +5,7 @@ import { getInitialFormData } from "../util/storage";
 
 function Result(props: { formId: string }) {
   const { formId } = props;
-  const [results, _] = useState<IFormData>(() => getInitialFormData(formId));
+  const [results] = useState<IFormData>(() => getInitialFormData(formId));
 
   return (
     <div>
