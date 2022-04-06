@@ -10,17 +10,11 @@ import { IFormData } from "./types/forms";
 function App() {
   const [state, setState] = useState<string>("HOME");
 
-  const [initialFormData, setInitialFormData] = useState<IFormData>({
-    id: new Date().getTime().toString(36),
-    title: "Untitled",
-    formfields: initialFormField,
-  });
-
   return (
     <>
       {state === "HOME" && <Home />}
-      {state === "FORM" && <Form formId={initialFormData.id} />}
-      {state === "RESULT" && <Result formId={initialFormData.id} />}
+      {/* {state === "FORM" && <Form formId={initialFormData.id} />}
+      {state === "RESULT" && <Result formId={initialFormData.id} />} */}
       {state === "LIST" && <List />}
     </>
   );

@@ -37,6 +37,7 @@ function List() {
   function addNewForm() {
     const newform: IFormData = {
       id: new Date().getTime().toString(36),
+      color: "#123456",
       title: "Untitled",
       formfields: initialFormField,
     };
@@ -78,7 +79,8 @@ function List() {
             return (
               <div
                 key={index}
-                className="max-w-xl p-4 bg-blue-100 rounded-md shadow-xl hover:shadow-md hover:bg-blue-200"
+                className="max-w-xl p-4 rounded-md shadow-xl hover:shadow-md"
+                style={{ backgroundColor: form.color ? form.color + "50" : "rgb(219 234 254)" }}
               >
                 <h1 className="text-xl font-semibold">
                   {index + 1}.) {form.title}
@@ -86,7 +88,7 @@ function List() {
                 <span className="pl-7">Questions: {form.formfields.length}</span>
                 <div className="flex justify-between mt-5 gap-4">
                   <button
-                    className="text-white bg-blue-500 text-center w-full hover:bg-blue-600 border border-transparent hover:border-black"
+                    className="text-white bg-blue-500 hover:bg-blue-600 text-center w-full  border border-transparent hover:border-black"
                     onClick={() => deleteFormData(form)}
                     type="button"
                   >
