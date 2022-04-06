@@ -2,25 +2,52 @@ import { Link, navigate } from "raviger";
 import React, { useEffect, useState, useRef } from "react";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData, IFormFieldProps } from "../types/forms";
-import { getLocalForms, saveFormData } from "../util/storage";
 import Fields from "./Fields";
-import NewField from "./NewField";
+
+const LOCAL_STORAGE_KEY = "kunal-react-form-data";
+
+//! Save the Form Data to LocalStorage
+function saveFormData(currentState: IFormData) {
+  const localForms = getLocalForms();
+  const updatedLocalForms = localForms.map((form) => {
+    return form.id === currentState.id ? currentState : form;
+  });
+  saveLocalData(updatedLocalForms);
+}
+
+function saveLocalData(currentState: IFormData[]) {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentState));
+}
+
+function getLocalForms(): IFormData[] {
+  const stringifiedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
+  return stringifiedFormData ? JSON.parse(stringifiedFormData) : [];
+}
 
 //! Get the Form Data from LocalStorage or return default value
 // TODO: ADD a custom redirect to `/link` if the formId doesn't exist in the LocalStorage
 function getInitialFormData(formId: string): IFormData {
+  console.log("YWSSSS");
   const localForms = getLocalForms();
   const formData = localForms.find((form) => form.id === formId);
+  const newFormData = {
+    id: new Date().getTime().toString(36),
+    title: "",
+    formfields: initialFormField,
+  };
   if (formData) return formData;
 
   navigate("/form-do-not-exist", { replace: true });
-  return {} as never;
+  return newFormData;
 }
 
 function Form(props: IFormFieldProps): JSX.Element {
   const { formId } = props;
 
   const [formField, setFormField] = useState<IFormData>(() => getInitialFormData(formId));
+  const [newFieldData, setNewFieldData] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
   const titleRef = useRef<HTMLInputElement>(null);
 
   //! Change the title of document if the Form component is rendered
@@ -46,6 +73,27 @@ function Form(props: IFormFieldProps): JSX.Element {
     };
   }, [formField]);
 
+  //! Add a new Field to the Form
+  function addNewField() {
+    if (newFieldData.length === 0) {
+      setError(true);
+      return;
+    }
+    setFormField({
+      ...formField,
+      formfields: [
+        ...formField.formfields,
+        {
+          id: new Date().getTime().toString(36),
+          label: newFieldData,
+          type: "text",
+          value: "",
+        },
+      ],
+    });
+    setNewFieldData("");
+  }
+
   //! Remove a Field from the Form
   function removeField(id: string) {
     setFormField({
@@ -61,15 +109,15 @@ function Form(props: IFormFieldProps): JSX.Element {
     navigate(`/result/${formId}`);
   }
 
-  // function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
-  //   setFormField({
-  //     ...formField,
-  //     formfields: formField.formfields.map((field) => {
-  //       if (field.id === id) return { ...field, value: e.target.value };
-  //       return field;
-  //     }),
-  //   });
-  // }
+  function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
+    setFormField({
+      ...formField,
+      formfields: formField.formfields.map((field) => {
+        if (field.id === id) return { ...field, value: e.target.value };
+        return field;
+      }),
+    });
+  }
 
   function onChangeLabelHandler(e: React.ChangeEvent<HTMLInputElement>, id: string) {
     setFormField({
@@ -88,37 +136,20 @@ function Form(props: IFormFieldProps): JSX.Element {
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-        <div className="bg-blue-200 py-2 px-4 rounded-xl">
-          <div className="flex gap-2 py-2">
-            <label className="text-gray-900 font-semibold py-2">Form Name: </label>
-            <input
-              className="w-full px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-              type="text"
-              onChange={(e) =>
-                setFormField({
-                  ...formField,
-                  title: e.target.value,
-                })
-              }
-              ref={titleRef}
-              value={formField.title}
-            />
-          </div>
-          <div className="flex gap-2 py-2">
-            <label className="text-gray-900 font-semibold py-2">Form color: </label>
-            <input
-              className="h-10 w-24 px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
-              type="color"
-              onChange={(e) =>
-                setFormField({
-                  ...formField,
-                  color: e.target.value,
-                })
-              }
-              value={formField.color}
-              // value="#"
-            />
-          </div>
+        <div className="flex gap-2 bg-blue-200 py-2 px-4 rounded-xl">
+          <label className="text-gray-900 font-semibold py-2">Form Name: </label>
+          <input
+            className="w-full px-4 py-2 border-2 rounded-lg flex-1 focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+            type="text"
+            onChange={(e) =>
+              setFormField({
+                ...formField,
+                title: e.target.value,
+              })
+            }
+            ref={titleRef}
+            value={formField.title}
+          />
         </div>
 
         {formField.formfields.map((field, index) => {
@@ -126,14 +157,37 @@ function Form(props: IFormFieldProps): JSX.Element {
             <Fields
               key={index}
               preview={false}
-              field={field}
+              label={field.label}
+              id={field.id}
+              type={field.type}
+              onChangeHandler={onChangeHandler}
               onClickHandler={onClickHandler}
               onLabelChangeHandler={onChangeLabelHandler}
             />
           );
         })}
 
-        <NewField formField={formField} setFormField={setFormField} />
+        <div className="pt-4">
+          <label className="text-gray-900 font-semibold py-2">
+            Add Field {error && <span className="text-red-500">Field cannot be empty</span>}
+          </label>
+          <div className="flex">
+            <input
+              className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
+              type="text"
+              onChange={(e) => setNewFieldData(e.target.value)}
+              value={newFieldData}
+            />
+            <button
+              className="text-white w-full bg-gray-500 mx-2 px-4 py-2 border-2 border-transparent  hover:border-green-500 rounded-lg hover:bg-gray-600"
+              onClick={addNewField}
+              type="button"
+            >
+              Add New Field ➕
+            </button>
+          </div>
+        </div>
+
         <div className="flex justify-between w-full mt-5">
           <Link
             className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"

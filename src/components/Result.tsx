@@ -1,11 +1,16 @@
 import { Link, navigate } from "raviger";
 import React, { useState } from "react";
+import { LOCAL_STORAGE_KEY } from "../config";
 import { IFormData } from "../types/forms";
-import { getLocalForms } from "../util/storage";
 
 function Result(props: { formId: string }) {
   const { formId } = props;
   const [results, setResults] = useState<IFormData>(() => getInitialFormData(formId));
+
+  function getLocalForms(): IFormData[] {
+    const stringifiedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return stringifiedFormData ? JSON.parse(stringifiedFormData) : [];
+  }
 
   //! Get the Form Data from LocalStorage or return default value
   // TODO: ADD a custom redirect to `/link` if the formId doesn't exist in the LocalStorage
@@ -14,7 +19,11 @@ function Result(props: { formId: string }) {
     const formData = localForms.find((form) => form.id === formId);
     if (formData) return formData;
     navigate("/form-do-not-exist", { replace: true });
-    return {} as never;
+    return {
+      id: new Date().getTime().toString(36),
+      title: "",
+      formfields: [],
+    };
   }
 
   return (
@@ -29,7 +38,7 @@ function Result(props: { formId: string }) {
             <span className="font-bold">
               {index + 1}. {label}
             </span>{" "}
-            <span>{typeof value === "object" ? value.join(", ") : value}</span>
+            <span>{value}</span>
           </div>
         );
       })}
