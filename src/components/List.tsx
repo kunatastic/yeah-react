@@ -1,19 +1,48 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { BG_COLOR_OPACITY } from "../config";
+import { BACKEND_URL, BG_COLOR_OPACITY } from "../config";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData } from "../types/forms";
 import { getLocalForms, saveLocalData } from "../util/storage";
 
+// function getFormData(setFormCB: (data: dummyForm[]) => void) {
+//   fetch("https://tsapi.coronasafe.live/api/mock_test/")
+//     .then((response) => response.json())
+//     .then((data) => setFormCB(data));
+// }
+
+async function getFormData(setFormCB: (data: dummyForm[]) => void) {
+  const response = await fetch(BACKEND_URL + "mock_test/");
+  const data = await response.json();
+  setFormCB(data);
+}
+
+function validateForm(form: dummyForm) {
+  // const errors = { title: "", description: "", is_public: false };
+  const errors: Error<dummyForm> = {};
+  if (form.title.length < 1) {
+    errors.title = "Title is required";
+  } else if (form.title.length > 100) {
+    errors.title = "Title must be less than 100 characters";
+  }
+  return errors;
+}
+
+type dummyForm = { id?: number; title: string; description?: string; is_public: boolean };
+type Error<T> = Partial<Record<keyof T, string>>;
 function List() {
   const [{ search }, setQuery] = useQueryParams();
   const [allFormData, setAllFormData] = useState<IFormData[]>(() => getLocalForms());
   const [searchString, setSearchString] = useState<string>("");
+  const [form, setForm] = useState<dummyForm[]>([]);
 
-  // const [data, setData] = useState<Number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   useEffect(() => {
     setAllFormData(() => getLocalForms());
   }, []);
+
+  useEffect(() => {
+    getFormData((data) => setForm(data));
+  });
 
   function deleteFormData(form: IFormData) {
     const newFormData = allFormData.filter((item) => item.id !== form.id);

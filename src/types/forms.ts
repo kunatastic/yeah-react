@@ -5,7 +5,7 @@ export interface IFormFieldProps {
 export interface IFormData {
   id: string;
   title: string;
-  color: string;
+  color?: string;
   formfields: InputFormField[];
 }
 
