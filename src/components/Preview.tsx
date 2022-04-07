@@ -54,7 +54,7 @@ function Preview(props: { formId: string }) {
     <>
       <div
         style={{ backgroundColor: formField.color + BG_COLOR_OPACITY }}
-        className="p-5 rounded-xl shadow-inner"
+        className="p-4 rounded-xl shadow-inner"
       >
         {formField.formfields.length === 0 ? (
           <>
@@ -70,12 +70,18 @@ function Preview(props: { formId: string }) {
           </>
         ) : (
           <>
-            <div className="flex justify-center w-full mt-5">
+            <p className="text-center font-semibold py-4 text-2xl">
+              {question + 1} out of {formField.formfields.length} Questions
+            </p>
+            <Fields
+              preview={true}
+              field={formField.formfields[question]}
+              onChangeHandler={onChangeHandler}
+            />
+            <div className="flex justify-center mt-8 w-full">
               <button
-                className={`text-white w-32 mx-2 px-4 py-2 text-center rounded-lg border-2 border-transparent ${
-                  question === 0
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "hover:border-black bg-gray-500 hover:bg-gray-600"
+                className={`w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black ${
+                  question === 0 && "bg-black-100 cursor-not-allowed"
                 }`}
                 onClick={() => {
                   if (question !== 0) setQuestion(question - 1);
@@ -85,10 +91,8 @@ function Preview(props: { formId: string }) {
                 ◀ Previous
               </button>
               <button
-                className={`text-white w-32 mx-2 px-4 py-2 text-center rounded-lg border-2 border-transparent ${
-                  question + 1 === formField.formfields.length
-                    ? "hover:border-black bg-blue-500 hover:bg-blue-600"
-                    : "hover:border-black bg-gray-500 hover:bg-gray-600"
+                className={`w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black ${
+                  question + 1 === formField.formfields.length && "bg-blue-300 hover:bg-blue-400"
                 }`}
                 type="button"
                 onClick={() => {
@@ -98,14 +102,6 @@ function Preview(props: { formId: string }) {
                 {formField.formfields.length === question + 1 ? "Submit ▶" : "Next ▶"}
               </button>
             </div>
-            <p className="text-center font-semibold py-4">
-              {question + 1} out of {formField.formfields.length} Questions
-            </p>
-            <Fields
-              preview={true}
-              field={formField.formfields[question]}
-              onChangeHandler={onChangeHandler}
-            />
           </>
         )}
 
@@ -118,13 +114,6 @@ function Preview(props: { formId: string }) {
               Save and view Result ✔
             </button>
           )}
-          <Link
-            className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent hover:border-black"
-            type="button"
-            href="/"
-          >
-            Home 🏠
-          </Link>
         </div>
       </div>
     </>

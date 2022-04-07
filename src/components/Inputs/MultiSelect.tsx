@@ -35,7 +35,7 @@ function MultiSelect(props: InputFormProps) {
 
         {showDropDown && (
           <>
-            <div className="h-48 overflow-auto scroll bg-gray-200">
+            <div className="h-48 overflow-auto scroll bg-gray-50">
               {props.field.options.map((option, index) => (
                 <div
                   key={index}
