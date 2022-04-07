@@ -1,10 +1,7 @@
 import React from "react";
-import { InputFormField } from "../../types/forms";
+import { InputFormProps } from "../../types/forms";
 
-function Radio(props: {
-  field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
-}) {
+function Radio(props: InputFormProps) {
   if (props.field.kind === "dropdown" && props.field.type === "radio")
     return (
       <>
@@ -19,7 +16,9 @@ function Radio(props: {
                 name={props.field.label}
                 value={option}
                 checked={props.field.value === option}
-                onChange={(e) => props.onChangeHandler(e, props.field.id)}
+                onChange={(e) =>
+                  props.onChangeHandler(e.target.value, props.field.id, props.field.kind)
+                }
               />
               <label> {option}</label>
               <br />

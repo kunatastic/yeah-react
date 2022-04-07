@@ -1,10 +1,7 @@
 import React from "react";
-import { InputFormField } from "../../types/forms";
+import { InputFormProps } from "../../types/forms";
 
-function Select(props: {
-  field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLSelectElement>, id: string) => void;
-}) {
+function Select(props: InputFormProps) {
   if (props.field.kind === "dropdown" && props.field.type === "single")
     return (
       <>
@@ -12,7 +9,7 @@ function Select(props: {
         <br />
         <select
           value={props.field.value}
-          onChange={(e) => props.onChangeHandler(e, props.field.id)}
+          onChange={(e) => props.onChangeHandler(e.target.value, props.field.id, props.field.kind)}
           className="w-full px-4 py-2 bg-whiteborder-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
         >
           <option value="null">Select a type</option>

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { InputFormField } from "../../types/forms";
+import { InputFormProps } from "../../types/forms";
 
-function CheckBox(props: {
-  field: InputFormField;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string, data: string[]) => void;
-}) {
+function CheckBox(props: InputFormProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
@@ -14,20 +11,18 @@ function CheckBox(props: {
   async function handleCheckboxField(event: React.ChangeEvent<HTMLInputElement>) {
     const isChecked = event.target.checked;
     const value = event.target.value;
+
     let changeData = [...selectedItems];
-    if (isChecked) {
-      changeData.push(value);
-    } else {
-      changeData = changeData.filter((item) => item !== value);
-    }
-    props.onChangeHandler(event, props.field.id, changeData);
+    if (isChecked) changeData.push(value);
+    else changeData = changeData.filter((item) => item !== value);
+
+    props.onChangeHandler(changeData, props.field.id, props.field.kind);
     setSelectedItems(changeData);
   }
 
   if (props.field.kind === "multiselect" && props.field.type === "checkbox")
     return (
       <>
-        {console.log("WOWOW: ", props.field.value, selectedItems)}
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
         {props.field.options.map((option, index) => {

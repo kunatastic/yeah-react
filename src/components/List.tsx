@@ -1,37 +1,24 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { LOCAL_STORAGE_KEY } from "../config";
+import { BG_COLOR_OPACITY } from "../config";
 import { formFields as initialFormField } from "../data/FormField";
 import { IFormData } from "../types/forms";
-
-function saveLocalData(currentState: IFormData[]) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentState));
-}
-
-function getLocalForms(): IFormData[] {
-  const stringifiedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
-  return stringifiedFormData ? JSON.parse(stringifiedFormData) : [];
-}
-
-//! Get the Form Data from LocalStorage or return default value
-function initialFormData(): IFormData[] {
-  const localForms = getLocalForms();
-  return localForms;
-}
+import { getLocalForms, saveLocalData } from "../util/storage";
 
 function List() {
   const [{ search }, setQuery] = useQueryParams();
-  const [allFormData, setAllFormData] = useState<IFormData[]>(initialFormData);
+  const [allFormData, setAllFormData] = useState<IFormData[]>(() => getLocalForms());
   const [searchString, setSearchString] = useState<string>("");
 
   // const [data, setData] = useState<Number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   useEffect(() => {
-    setAllFormData(() => initialFormData());
+    setAllFormData(() => getLocalForms());
   }, []);
 
   function deleteFormData(form: IFormData) {
-    saveLocalData(allFormData.filter((data) => data.id !== form.id));
-    setAllFormData(allFormData.filter((data) => data.id !== form.id));
+    const newFormData = allFormData.filter((item) => item.id !== form.id);
+    saveLocalData(newFormData);
+    setAllFormData(newFormData);
   }
 
   function addNewForm() {
@@ -80,7 +67,9 @@ function List() {
               <div
                 key={index}
                 className="max-w-xl p-4 rounded-md shadow-xl hover:shadow-md"
-                style={{ backgroundColor: form.color ? form.color + "50" : "rgb(219 234 254)" }}
+                style={{
+                  backgroundColor: form.color ? form.color + BG_COLOR_OPACITY : "rgb(219 234 254)",
+                }}
               >
                 <h1 className="text-xl font-semibold">
                   {index + 1}.) {form.title}

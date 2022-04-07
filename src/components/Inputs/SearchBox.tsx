@@ -6,6 +6,7 @@ function SearchBox(props: {
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>, id: string, data: string[]) => void;
 }) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [showDropDown, setShowDropDown] = useState<Boolean>(false);
 
   useEffect(() => {
     if (props.field.kind === "multiselect") setSelectedItems(props.field.value);
@@ -13,21 +14,15 @@ function SearchBox(props: {
 
   async function handleDropDownClick(value: string) {
     let changeData = [...selectedItems];
-    if (changeData.includes(value)) {
-      changeData = changeData.filter((item) => item !== value);
-    } else {
-      changeData.push(value);
-    }
+    if (changeData.includes(value)) changeData = changeData.filter((item) => item !== value);
+    else changeData.push(value);
     props.onChangeHandler({} as never, props.field.id, changeData);
     setSelectedItems(changeData);
   }
 
-  const [showDropDown, setShowDropDown] = useState<Boolean>(false);
-
   if (props.field.kind === "multiselect" && props.field.type === "multiple")
     return (
       <>
-        {console.log("WOWOW: ", props.field.value, selectedItems)}
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
         <h1 className="font-xl my-2 flex justify-between items-center">
