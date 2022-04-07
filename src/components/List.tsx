@@ -95,30 +95,38 @@ function List() {
             return (
               <div
                 key={index}
-                className="max-w-xl p-4 rounded-md shadow-xl hover:shadow-md"
+                className="w-full rounded-md shadow-xl hover:shadow-md flex justify-between"
                 style={{
                   backgroundColor: form.color ? form.color + BG_COLOR_OPACITY : "rgb(219 234 254)",
                 }}
               >
-                <h1 className="text-xl font-semibold">
-                  {index + 1}.) {form.title}
-                </h1>
-                <span className="pl-7">Questions: {form.formfields.length}</span>
-                <div className="flex justify-between mt-5 gap-4">
+                <div className="p-4">
+                  <h1 className="text-xl font-semibold">
+                    {index + 1}.) {form.title}
+                  </h1>
+                  <span className="pl-7">Questions: {form.formfields.length}</span>
+                </div>
+                <div className="flex flex-col justify-between px-4 py-2">
                   <button
-                    className="text-white bg-blue-500 hover:bg-blue-600 text-center w-full  border border-transparent hover:border-black"
+                    className="text-black bg-red-400 text-center w-full px-2 hover:bg-red-500 border border-transparent border-black"
                     onClick={() => deleteFormData(form)}
                     type="button"
                   >
                     Delete
                   </button>
                   <Link
-                    className="text-white bg-blue-500 text-center w-full hover:bg-blue-600 border border-transparent hover:border-black"
-                    // onClick={() => props.loadFormCB(form)}
+                    className="text-black bg-blue-400 text-center w-full px-2 hover:bg-blue-500 border border-transparent border-black"
                     type="button"
                     href={`/form/${form.id}`}
                   >
-                    Visit
+                    Edit
+                  </Link>
+                  <Link
+                    className="text-black bg-green-400 text-center w-full px-2 hover:bg-green-500 border border-transparent border-black"
+                    type="button"
+                    href={`/preview/${form.id}`}
+                  >
+                    Preview
                   </Link>
                 </div>
               </div>
