@@ -1,9 +1,11 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { BACKEND_URL, BG_COLOR_OPACITY } from "../config";
-import { formFields as initialFormField } from "../data/FormField";
-import { IFormData } from "../types/forms";
-import { getLocalForms, saveLocalData } from "../util/storage";
+import { API_BASE_URL, BG_COLOR_OPACITY } from "../../config";
+import { formFields as initialFormField } from "../../data/FormFieldData";
+import { dummyForm, IFormData } from "../../types/FormsTypes";
+import { getLocalForms, saveLocalData } from "../../util/StorageUtils";
+import Modal from "../common/Modal";
+import CreateForm from "../CreateForm";
 
 // function getFormData(setFormCB: (data: dummyForm[]) => void) {
 //   fetch("https://tsapi.coronasafe.live/api/mock_test/")
@@ -12,29 +14,18 @@ import { getLocalForms, saveLocalData } from "../util/storage";
 // }
 
 async function getFormData(setFormCB: (data: dummyForm[]) => void) {
-  const response = await fetch(BACKEND_URL + "mock_test/");
+  const response = await fetch(API_BASE_URL + "mock_test/");
   const data = await response.json();
+  console.log(data);
   setFormCB(data);
 }
 
-function validateForm(form: dummyForm) {
-  // const errors = { title: "", description: "", is_public: false };
-  const errors: Error<dummyForm> = {};
-  if (form.title.length < 1) {
-    errors.title = "Title is required";
-  } else if (form.title.length > 100) {
-    errors.title = "Title must be less than 100 characters";
-  }
-  return errors;
-}
-
-type dummyForm = { id?: number; title: string; description?: string; is_public: boolean };
-type Error<T> = Partial<Record<keyof T, string>>;
 function List() {
   const [{ search }, setQuery] = useQueryParams();
   const [allFormData, setAllFormData] = useState<IFormData[]>(() => getLocalForms());
   const [searchString, setSearchString] = useState<string>("");
   const [form, setForm] = useState<dummyForm[]>([]);
+  const [newForm, setNewForm] = useState(false);
 
   useEffect(() => {
     setAllFormData(() => getLocalForms());
@@ -42,23 +33,12 @@ function List() {
 
   useEffect(() => {
     getFormData((data) => setForm(data));
-  });
+  }, []);
 
   function deleteFormData(form: IFormData) {
     const newFormData = allFormData.filter((item) => item.id !== form.id);
     saveLocalData(newFormData);
     setAllFormData(newFormData);
-  }
-
-  function addNewForm() {
-    const newform: IFormData = {
-      id: new Date().getTime().toString(36),
-      color: "#123456",
-      title: "Untitled",
-      formfields: initialFormField,
-    };
-    saveLocalData([...allFormData, newform]);
-    navigate(`/form/${newform.id}`);
   }
 
   return (
@@ -88,7 +68,7 @@ function List() {
           </button>
         </div>
       </form>
-      <div className="grid grid-cols-2 self-center gap-4">
+      <div className="grid  grid-cols-1 lg:grid-cols-2 self-center gap-4">
         {allFormData
           .filter((form) => form.title.toLowerCase().includes(search?.toLowerCase() || ""))
           .map((form, index) => {
@@ -132,17 +112,21 @@ function List() {
               </div>
             );
           })}
-        <div className="w-full p-4 bg-gray-100 rounded-md shadow-xl hover:shadow-md hover:bg-gray-200">
+        <div className="w-full p-4 border-black bg-gray-200 rounded-md shadow-xl hover:shadow-md hover:bg-gray-300">
           <h1 className="text-xl font-semibold">New Form</h1>
           <div className="flex justify-between mt-5">
             <button
               className="text-white bg-blue-500 w-full hover:bg-blue-600 border border-transparent hover:border-black"
-              onClick={addNewForm}
+              onClick={() => setNewForm(true)}
             >
-              Add
+              Create New Form
             </button>
           </div>
         </div>
+
+        <Modal open={newForm} onCloseCB={() => setNewForm(false)}>
+          <CreateForm />
+        </Modal>
       </div>
     </>
   );

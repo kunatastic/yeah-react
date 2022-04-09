@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { InputFormField } from "../../types/forms";
+import { InputFormField } from "../../types/FormsTypes";
 
 function SearchBox(props: {
   field: InputFormField;

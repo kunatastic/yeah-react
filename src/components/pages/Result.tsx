@@ -1,7 +1,7 @@
 import { Link } from "raviger";
 import React, { useState } from "react";
-import { IFormData } from "../types/forms";
-import { getInitialFormData } from "../util/storage";
+import { IFormData } from "../../types/FormsTypes";
+import { getInitialFormData } from "../../util/StorageUtils";
 
 function Result(props: { formId: string }) {
   const { formId } = props;

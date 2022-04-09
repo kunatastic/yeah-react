@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { formFieldOptions } from "../data/FormField";
-import { FormEditActions } from "../types/actions-reducer";
-import { IFormData, inputTypes } from "../types/forms";
+import { formFieldOptions } from "../data/FormFieldData";
+import { FormEditActions } from "../types/ActionReducerTypes";
+import { IFormData, inputTypes } from "../types/FormsTypes";
 interface INewFieldProps {
   formField: IFormData;
   dispatchFormAction: (action: FormEditActions) => void;

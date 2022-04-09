@@ -1,11 +1,11 @@
 import { useRoutes } from "raviger";
 import App from "../App";
-import About from "../components/About";
-import Container from "../components/Container";
-import Form from "../components/Form";
-import List from "../components/List";
-import Preview from "../components/Preview";
-import Result from "../components/Result";
+import About from "../components/pages/About";
+import Container from "../components/common/Container";
+import Form from "../components/pages/Form";
+import List from "../components/pages/List";
+import Preview from "../components/pages/Preview";
+import Result from "../components/pages/Result";
 
 const routes = {
   "/": () => <App />,

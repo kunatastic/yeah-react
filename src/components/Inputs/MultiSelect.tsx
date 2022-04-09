@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { InputFormProps } from "../../types/forms";
+import { InputFormProps } from "../../types/FormsTypes";
 
 function MultiSelect(props: InputFormProps) {
   const [showDropDown, setShowDropDown] = useState<Boolean>(false);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import noiseImage from "../assets/noise.png";
+import noiseImage from "../../assets/noise.png";
 
 function Noise({ opacity = 1 }) {
   const [bodyHeight, setBodyHeight] = useState(0);

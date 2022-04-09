@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IFieldProps } from "../types/forms";
+import { IFieldProps } from "../types/FormsTypes";
 
 import Text from "./Inputs/Text";
 import Radio from "./Inputs/Radio";

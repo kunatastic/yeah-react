@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-import Form from "./components/Form";
-import Home from "./components/Home";
-import List from "./components/List";
-import Result from "./components/Result";
-import { formFields as initialFormField } from "./data/FormField";
-import { IFormData } from "./types/forms";
+import Form from "./components/pages/Form";
+import Home from "./components/pages/Home";
+import List from "./components/pages/List";
+import Result from "./components/pages/Result";
+import { formFields as initialFormField } from "./data/FormFieldData";
+import { IFormData } from "./types/FormsTypes";
 
 function App() {
   const [state, setState] = useState<string>("HOME");

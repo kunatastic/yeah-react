@@ -1,10 +1,10 @@
-import { Link } from "raviger";
+import { Link, navigate } from "raviger";
 import React, { useEffect, useRef, useReducer } from "react";
-import { IFormFieldProps } from "../types/forms";
-import { EditFormReducer } from "../util/action-reducer";
-import { getInitialFormData, saveFormData } from "../util/storage";
-import Fields from "./Fields";
-import NewField from "./NewField";
+import { IFormFieldProps } from "../../types/FormsTypes";
+import { EditFormReducer } from "../../util/ActionReducerUtils";
+import { getInitialFormData, saveFormData, verifyFormId } from "../../util/StorageUtils";
+import Fields from "../Fields";
+import NewField from "../NewField";
 
 function Form(props: IFormFieldProps): JSX.Element {
   const { formId } = props;
@@ -26,6 +26,15 @@ function Form(props: IFormFieldProps): JSX.Element {
     const timeout = setTimeout(() => saveFormData(formField), 1000);
     return () => clearTimeout(timeout);
   }, [formField]);
+
+  useEffect(() => {
+    if (!verifyFormId(formId)) {
+      console.log("FALSE");
+      navigate("/form-do-not-exist", { replace: true });
+    } else {
+      console.log("TRUE");
+    }
+  }, []);
 
   function onChangeLabelHandler(label: string, id: string) {
     dispatch({ type: "UPDATE_FORM_LABEL", id: id, label: label });
@@ -58,17 +67,18 @@ function Form(props: IFormFieldProps): JSX.Element {
           </div>
         </div>
 
-        {formField.formfields.map((field, index) => {
-          return (
-            <Fields
-              key={index}
-              preview={false}
-              field={field}
-              onClickHandler={(_) => dispatch({ type: "REMOVE_FORM_FIELD", id: field.id })}
-              onLabelChangeHandler={onChangeLabelHandler}
-            />
-          );
-        })}
+        {formField.formfields !== undefined &&
+          formField.formfields.map((field, index) => {
+            return (
+              <Fields
+                key={index}
+                preview={false}
+                field={field}
+                onClickHandler={(_) => dispatch({ type: "REMOVE_FORM_FIELD", id: field.id })}
+                onLabelChangeHandler={onChangeLabelHandler}
+              />
+            );
+          })}
 
         <NewField formField={formField} dispatchFormAction={dispatch} />
         <div className="flex justify-between w-full mt-5">

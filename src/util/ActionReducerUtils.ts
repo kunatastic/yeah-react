@@ -1,6 +1,6 @@
 // import { FormEditActions, FormPreviewActions } from "../types/actions-reducer";
-import { FormEditActions } from "../types/actions-reducer";
-import { IFormData, InputFormField, inputTypes } from "../types/forms";
+import { FormEditActions } from "../types/ActionReducerTypes";
+import { IFormData, InputFormField, inputTypes } from "../types/FormsTypes";
 
 export function createNewFormField(fieldType: inputTypes): InputFormField {
   switch (fieldType.kind) {

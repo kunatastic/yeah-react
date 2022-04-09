@@ -1,9 +1,9 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useReducer, useState } from "react";
-import Fields from "./Fields";
-import { getInitialFormData, saveFormData } from "../util/storage";
-import { PreviewFormReducer } from "../util/action-reducer";
-import { BG_COLOR_OPACITY } from "../config";
+import Fields from "../Fields";
+import { getInitialFormData, saveFormData } from "../../util/StorageUtils";
+import { PreviewFormReducer } from "../../util/ActionReducerUtils";
+import { BG_COLOR_OPACITY } from "../../config";
 
 function Preview(props: { formId: string }) {
   const { formId } = props;

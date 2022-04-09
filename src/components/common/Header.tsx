@@ -1,7 +1,7 @@
 import { Link } from "raviger";
 import React from "react";
-import { NavRoutes } from "../data/NavRoutes";
-import logo from "../logo.svg";
+import { NavRoutes } from "../../data/NavRoutesData";
+import logo from "../../logo.svg";
 
 function Header() {
   return (

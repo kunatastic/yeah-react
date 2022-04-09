@@ -1,5 +1,5 @@
 import React from "react";
-import { InputFormProps } from "../../types/forms";
+import { InputFormProps } from "../../types/FormsTypes";
 
 function Radio(props: InputFormProps) {
   if (props.field.kind === "dropdown" && props.field.type === "radio")

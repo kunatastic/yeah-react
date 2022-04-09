@@ -109,3 +109,23 @@ export type InputFormProps = {
   ) => void;
   field: InputFormField;
 };
+
+export function validateForm(form: dummyForm): Error<dummyForm> {
+  // const errors = { title: "", description: "", is_public: false };
+  const errors: Error<dummyForm> = {};
+  if (form.title.length < 1) {
+    errors.title = "Title is required";
+  } else if (form.title.length > 100) {
+    errors.title = "Title must be less than 100 characters";
+  }
+  return errors;
+}
+
+export type dummyForm = {
+  id?: number;
+  title: string;
+  description?: string;
+  is_public: boolean;
+};
+
+export type Error<T> = Partial<Record<keyof T, string>>;
