@@ -6,7 +6,8 @@ function MultiSelect(props: InputFormProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
-    if (props.field.kind === "multiselect") setSelectedItems(props.field.value);
+    if (props.field.kind === "MULTISELECT" && props.field.value !== undefined)
+      setSelectedItems(props.field.value);
   }, [props.field.kind, props.field.value]);
 
   async function handleDropDownClick(value: string) {
@@ -18,7 +19,7 @@ function MultiSelect(props: InputFormProps) {
     setSelectedItems(changeData);
   }
 
-  if (props.field.kind === "multiselect" && props.field.type === "multiple")
+  if (props.field.kind === "MULTISELECT" && props.field.fieldType === "multiple")
     return (
       <>
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>

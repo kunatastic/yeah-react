@@ -1,9 +1,8 @@
-import { Link, navigate, useQueryParams } from "raviger";
+import { Link, useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { API_BASE_URL, BG_COLOR_OPACITY } from "../../config";
-import { formFields as initialFormField } from "../../data/FormFieldData";
-import { dummyForm, IFormData } from "../../types/FormsTypes";
-import { getLocalForms, saveLocalData } from "../../util/StorageUtils";
+import { Pagination } from "../../types/CommonTypes";
+import { formMetaType } from "../../types/FormsTypes";
+import { deleteForm, listForm } from "../../util/ApiUtils";
 import Modal from "../common/Modal";
 import CreateForm from "../CreateForm";
 
@@ -13,32 +12,29 @@ import CreateForm from "../CreateForm";
 //     .then((data) => setFormCB(data));
 // }
 
-async function getFormData(setFormCB: (data: dummyForm[]) => void) {
-  const response = await fetch(API_BASE_URL + "mock_test/");
-  const data = await response.json();
-  console.log(data);
-  setFormCB(data);
+async function getFormData(setFormCB: (data: formMetaType[]) => void) {
+  try {
+    const data: Pagination<formMetaType> = await listForm({ offset: 0, limit: 3 });
+    setFormCB(data.results);
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 function List() {
   const [{ search }, setQuery] = useQueryParams();
-  const [allFormData, setAllFormData] = useState<IFormData[]>(() => getLocalForms());
   const [searchString, setSearchString] = useState<string>("");
-  const [form, setForm] = useState<dummyForm[]>([]);
+  const [form, setForm] = useState<formMetaType[]>([]);
   const [newForm, setNewForm] = useState(false);
-
-  useEffect(() => {
-    setAllFormData(() => getLocalForms());
-  }, []);
 
   useEffect(() => {
     getFormData((data) => setForm(data));
   }, []);
 
-  function deleteFormData(form: IFormData) {
-    const newFormData = allFormData.filter((item) => item.id !== form.id);
-    saveLocalData(newFormData);
-    setAllFormData(newFormData);
+  async function deleteFormData(formId: string) {
+    await deleteForm(formId);
+    getFormData((data) => setForm(data));
   }
 
   return (
@@ -69,27 +65,30 @@ function List() {
         </div>
       </form>
       <div className="grid  grid-cols-1 lg:grid-cols-2 self-center gap-4">
-        {allFormData
+        {form
           .filter((form) => form.title.toLowerCase().includes(search?.toLowerCase() || ""))
           .map((form, index) => {
             return (
               <div
                 key={index}
                 className="w-full rounded-md shadow-xl hover:shadow-md flex justify-between"
-                style={{
-                  backgroundColor: form.color ? form.color + BG_COLOR_OPACITY : "rgb(219 234 254)",
-                }}
+                // style={{
+                //   backgroundColor: form.color ? form.color + BG_COLOR_OPACITY : "rgb(219 234 254)",
+                // }}
               >
                 <div className="p-4">
                   <h1 className="text-xl font-semibold">
                     {index + 1}.) {form.title}
                   </h1>
-                  <span className="pl-7">Questions: {form.formfields.length}</span>
+                  <p className="text-sm">{form.description}</p>
+                  <span className="text-sm">{form.is_public ? "Public" : "Private"}</span>
                 </div>
                 <div className="flex flex-col justify-between px-4 py-2">
                   <button
                     className="text-black bg-red-400 text-center w-full px-2 hover:bg-red-500 border border-transparent border-black"
-                    onClick={() => deleteFormData(form)}
+                    onClick={() => {
+                      if (form.id) deleteFormData(form.id);
+                    }}
                     type="button"
                   >
                     Delete

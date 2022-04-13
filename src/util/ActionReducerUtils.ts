@@ -1,37 +1,48 @@
 // import { FormEditActions, FormPreviewActions } from "../types/actions-reducer";
 import { FormEditActions } from "../types/ActionReducerTypes";
-import { IFormData, InputFormField, inputTypes } from "../types/FormsTypes";
+import { AcceptedKind } from "../types/CommonTypes";
+import { fieldType, IFormData, inputTypes } from "../types/FormsTypes";
 
-export function createNewFormField(fieldType: inputTypes): InputFormField {
-  switch (fieldType.kind) {
-    case "text":
+export function createNewFormField(
+  label: string = "",
+  kind: AcceptedKind,
+  fieldType: fieldType,
+  options: string[] = []
+): inputTypes {
+  switch (kind) {
+    case "TEXT":
       return {
-        kind: "text",
+        kind: kind,
         id: new Date().getTime().toString(),
-        label: fieldType.label,
-        type: fieldType.fieldType,
+        label: label,
+        fieldType: fieldType,
         value: "",
       };
-    case "dropdown":
+    case "RADIO":
       return {
-        kind: "dropdown",
+        kind: kind,
         id: new Date().getTime().toString(),
-        label: fieldType.label,
-        type: fieldType.fieldType,
+        label: label,
+        fieldType: fieldType,
         value: "",
-        options: fieldType.options,
+        options: options,
       };
-    case "multiselect":
+    case "MULTISELECT":
       return {
-        kind: "multiselect",
+        kind: kind,
         id: new Date().getTime().toString(),
-        label: fieldType.label,
-        type: fieldType.fieldType,
+        label: label,
+        fieldType: fieldType,
         value: [],
-        options: fieldType.options,
+        options: options,
       };
     default:
-      return {} as never;
+      return {
+        kind: "TEXT",
+        id: new Date().getTime().toString(),
+        label: "Enter a label",
+        fieldType: "text",
+      };
   }
 }
 
@@ -39,7 +50,12 @@ export function createNewFormField(fieldType: inputTypes): InputFormField {
 export function EditFormReducer(state: IFormData, action: FormEditActions): IFormData {
   switch (action.type) {
     case "ADD_FORM_FIELD":
-      const newField = createNewFormField(action.fieldType);
+      const newField = createNewFormField(
+        action.fieldType.label,
+        action.fieldType.kind,
+        action.fieldType.fieldType,
+        action.fieldType.kind !== "TEXT" ? action.fieldType.options : []
+      );
       return { ...state, formfields: [...state.formfields, newField] };
     case "REMOVE_FORM_FIELD":
       return { ...state, formfields: state.formfields.filter((field) => field.id !== action.id) };
@@ -61,12 +77,15 @@ export function EditFormReducer(state: IFormData, action: FormEditActions): IFor
 }
 
 type UpdateFormValueActionSingle = { type: "UPDATE_FORM_VALUE_SINGLE"; id: string; value: string };
+
 type UpdateFormValueActionMultiple = {
   type: "UPDATE_FORM_VALUE_MULTIPLE";
   id: string;
   value: string[];
 };
+
 type ClearFormValueAction = { type: "CLEAR_FORM_VALUE"; id: string };
+
 export type FormPreviewActions =
   | UpdateFormValueActionSingle
   | UpdateFormValueActionMultiple
@@ -78,7 +97,7 @@ export function PreviewFormReducer(state: IFormData, action: FormPreviewActions)
       return {
         ...state,
         formfields: state.formfields.map((field) => {
-          if (field.id === action.id && (field.kind === "text" || field.kind === "dropdown"))
+          if (field.id === action.id && (field.kind === "TEXT" || field.kind === "RADIO"))
             return { ...field, value: action.value };
           return field;
         }),
@@ -87,7 +106,7 @@ export function PreviewFormReducer(state: IFormData, action: FormPreviewActions)
       return {
         ...state,
         formfields: state.formfields.map((field) => {
-          if (field.id === action.id && field.kind === "multiselect")
+          if (field.id === action.id && field.kind === "MULTISELECT")
             return { ...field, value: action.value };
           return field;
         }),
@@ -96,9 +115,9 @@ export function PreviewFormReducer(state: IFormData, action: FormPreviewActions)
       return {
         ...state,
         formfields: state.formfields.map((field) => {
-          if (field.id === action.id && (field.kind === "text" || field.kind === "dropdown"))
+          if (field.id === action.id && (field.kind === "TEXT" || field.kind === "RADIO"))
             return { ...field, value: "" };
-          else if (field.id === action.id && field.kind === "multiselect")
+          else if (field.id === action.id && field.kind === "MULTISELECT")
             return { ...field, value: [] };
           return field;
         }),

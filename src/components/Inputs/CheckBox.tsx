@@ -5,7 +5,8 @@ function CheckBox(props: InputFormProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
-    if (props.field.kind === "multiselect") setSelectedItems(props.field.value);
+    if (props.field.kind === "MULTISELECT" && props.field.value !== undefined)
+      setSelectedItems(props.field.value);
   }, [props.field.kind, props.field.value]);
 
   async function handleCheckboxField(event: React.ChangeEvent<HTMLInputElement>) {
@@ -20,7 +21,7 @@ function CheckBox(props: InputFormProps) {
     setSelectedItems(changeData);
   }
 
-  if (props.field.kind === "multiselect" && props.field.type === "checkbox")
+  if (props.field.kind === "MULTISELECT" && props.field.fieldType === "checkbox")
     return (
       <>
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
@@ -29,7 +30,7 @@ function CheckBox(props: InputFormProps) {
           return (
             <React.Fragment key={index}>
               <input
-                type={props.field.type}
+                type={props.field.fieldType}
                 name={props.field.label}
                 value={option}
                 checked={selectedItems.includes(option)}

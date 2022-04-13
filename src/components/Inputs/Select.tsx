@@ -2,7 +2,7 @@ import React from "react";
 import { InputFormProps } from "../../types/FormsTypes";
 
 function Select(props: InputFormProps) {
-  if (props.field.kind === "dropdown" && props.field.type === "single")
+  if (props.field.kind === "RADIO" && props.field.fieldType === "single")
     return (
       <>
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>

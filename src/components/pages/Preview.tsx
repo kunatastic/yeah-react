@@ -1,9 +1,10 @@
 import { Link, navigate, useQueryParams } from "raviger";
 import React, { useEffect, useReducer, useState } from "react";
-import Fields from "../Fields";
 import { getInitialFormData, saveFormData } from "../../util/StorageUtils";
 import { PreviewFormReducer } from "../../util/ActionReducerUtils";
 import { BG_COLOR_OPACITY } from "../../config";
+import PreviewField from "../PreviewField";
+import { AcceptedKind } from "../../types/CommonTypes";
 
 function Preview(props: { formId: string }) {
   const { formId } = props;
@@ -33,14 +34,10 @@ function Preview(props: { formId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
-  function onChangeHandler(
-    value: string[] | string,
-    id: string,
-    kind: "text" | "dropdown" | "multiselect"
-  ) {
-    if (kind === "multiselect") {
+  function onChangeHandler(value: string[] | string, id: string, kind: AcceptedKind) {
+    if (kind === "MULTISELECT") {
       dispatch({ type: "UPDATE_FORM_VALUE_MULTIPLE", id: id, value: value as string[] });
-    } else if (kind === "dropdown" || kind === "text") {
+    } else if (kind === "RADIO" || kind === "TEXT") {
       dispatch({ type: "UPDATE_FORM_VALUE_SINGLE", id: id, value: value as string });
     }
   }
@@ -73,8 +70,7 @@ function Preview(props: { formId: string }) {
             <p className="text-center font-semibold py-4 text-2xl">
               {question + 1} out of {formField.formfields.length} Questions
             </p>
-            <Fields
-              preview={true}
+            <PreviewField
               field={formField.formfields[question]}
               onChangeHandler={onChangeHandler}
             />

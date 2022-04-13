@@ -1,15 +1,41 @@
 import React, { useState } from "react";
-import { formFieldOptions } from "../data/FormFieldData";
-import { FormEditActions } from "../types/ActionReducerTypes";
-import { IFormData, inputTypes } from "../types/FormsTypes";
-interface INewFieldProps {
-  formField: IFormData;
-  dispatchFormAction: (action: FormEditActions) => void;
-}
+import { AcceptedKind } from "../types/CommonTypes";
+import { fieldType, inputTypes } from "../types/FormsTypes";
+import { createNewFormField } from "../util/ActionReducerUtils";
+import { addField } from "../util/ApiUtils";
 
-function NewField(props: INewFieldProps) {
-  const { dispatchFormAction } = props;
+const fieldTypes: {
+  label: string;
+  value: string;
+  kind: AcceptedKind;
+}[] = [
+  { label: "Text", value: "text", kind: "TEXT" },
+  { label: "Date", value: "date", kind: "TEXT" },
+  { label: "Time", value: "time", kind: "TEXT" },
+  { label: "Number", value: "number", kind: "TEXT" },
+  { label: "Email", value: "email", kind: "TEXT" },
+  { label: "Phone", value: "tel", kind: "TEXT" },
+  { label: "Textarea", value: "textarea", kind: "TEXT" },
+  { label: "Password", value: "password", kind: "TEXT" },
+  { label: "Dropdown", value: "single", kind: "RADIO" },
+  { label: "Multi-Select", value: "multiple", kind: "MULTISELECT" },
+  { label: "Checkbox", value: "checkbox", kind: "MULTISELECT" },
+  { label: "Radio", value: "radio", kind: "RADIO" },
+];
 
+const optionFieldTypes: {
+  label: string;
+  value: fieldType;
+  kind: "RADIO" | "MULTISELECT";
+}[] = [
+  { label: "Dropdown", value: "single", kind: "RADIO" },
+  { label: "Multi-Select", value: "multiple", kind: "MULTISELECT" },
+  { label: "Checkbox", value: "checkbox", kind: "MULTISELECT" },
+  { label: "Radio", value: "radio", kind: "RADIO" },
+];
+
+function NewField(props: { formId: string }) {
+  const { formId } = props;
   const [error, setError] = useState<{ [key: string]: boolean }>({
     error1: false,
     error2: false,
@@ -17,43 +43,50 @@ function NewField(props: INewFieldProps) {
   });
   const [optionInput, setOptionInput] = useState<string>("");
   const [fieldType, setFieldType] = useState<inputTypes>({
-    kind: "null",
-    fieldType: "null",
     label: "",
+    kind: "TEXT",
+    fieldType: "text",
+    id: new Date().getTime().toString(),
   });
 
   //! Add a new Field to the Form
-  function addNewField() {
-    if (fieldType.label.length === 0) {
+  async function addNewField() {
+    if (fieldType?.label.length === 0) {
       setError({ ...error, error1: true });
       return;
-    } else if (fieldType.kind === "null") {
+    } else if (fieldType === null) {
       setError({ ...error, error2: true });
       return;
     } else if (
-      (fieldType.kind === "dropdown" || fieldType.kind === "multiselect") &&
-      fieldType.options.length === 0
+      (fieldType?.kind === "RADIO" || fieldType?.kind === "MULTISELECT") &&
+      fieldType?.options.length === 0
     ) {
       setError({ ...error, error3: true });
       return;
     }
-    dispatchFormAction({ type: "ADD_FORM_FIELD", fieldType: fieldType });
+    console.log(fieldType);
+    const data = await addField(formId, fieldType);
+    console.log(data);
+    // dispatchFormAction({ type: "ADD_FORM_FIELD", fieldType: fieldType });
     setError({ ...error, error1: false, error2: false, error3: false });
-    setFieldType({ kind: "null", fieldType: "null", label: "" });
+    // setFieldType(null);
   }
 
-  function onChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
-    formFieldOptions.forEach((field) => {
-      field.inputOptions.forEach((option) => {
-        if (option.fieldType === e.target.value) {
-          setFieldType({ ...option, label: fieldType.label });
-        }
-      });
+  function onChangeHandler(formFieldType: fieldType) {
+    const tempType = fieldTypes.filter((field) => field.value === formFieldType);
+    setFieldType((prevState) => {
+      return createNewFormField(
+        prevState.label,
+        tempType[0].kind,
+        formFieldType,
+        prevState.kind !== "TEXT" ? prevState.options : []
+      );
     });
   }
 
   return (
     <div className="mt-4 p-4 rounded-xl bg-blue-200">
+      {console.log(fieldType)}
       <div className="grid grid-cols-3 gap-2 align-bottom">
         <div className="col-start-1 col-span-2">
           <label className="text-gray-900 font-semibold py-2">
@@ -62,7 +95,12 @@ function NewField(props: INewFieldProps) {
           <input
             className="w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
             type="text"
-            onChange={(e) => setFieldType({ ...fieldType, label: e.target.value })}
+            onChange={(e) =>
+              setFieldType((formType) => {
+                if (fieldType) return { ...fieldType, label: e.target.value };
+                return formType;
+              })
+            }
             value={fieldType.label}
           />
         </div>
@@ -72,23 +110,18 @@ function NewField(props: INewFieldProps) {
           </label>
           <select
             value={fieldType.fieldType}
-            onChange={(e) => onChangeHandler(e)}
+            onChange={(e) => onChangeHandler(e.target.value as fieldType)}
             className="w-full px-4 py-2 bg-whiteborder-2 rounded-lg focus:outline-none focus:border-2 focus:border-gray-400 border-gray-200"
           >
-            <option value="null">Select a type</option>
-            {formFieldOptions.map((field, index) => (
-              <optgroup label={field.groupName} key={index}>
-                {field.inputOptions.map((option, index) => (
-                  <option value={option.fieldType} key={index} className="capitalize">
-                    {option.fieldType}
-                  </option>
-                ))}
-              </optgroup>
+            {fieldTypes.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
             ))}
           </select>
         </div>
       </div>
-      {(fieldType.kind === "dropdown" || fieldType.kind === "multiselect") && (
+      {optionFieldTypes.filter((item) => item.value === fieldType.fieldType).length === 1 && (
         <>
           <div className="grid grid-cols-3 gap-2 align-bottom">
             <div className="col-start-1 col-span-2">
@@ -106,8 +139,10 @@ function NewField(props: INewFieldProps) {
             <button
               className="text-white w-full bg-gray-500 px-4 py-2 border-2 border-transparent  hover:border-green-500 mt-6 rounded-lg hover:bg-gray-600"
               onClick={() => {
-                setFieldType({ ...fieldType, options: [...fieldType.options, optionInput] });
-                setOptionInput("");
+                if (fieldType.kind === "MULTISELECT" || fieldType.kind === "RADIO") {
+                  setFieldType({ ...fieldType, options: [...fieldType.options, optionInput] });
+                  setOptionInput("");
+                }
               }}
               type="button"
             >
@@ -117,31 +152,33 @@ function NewField(props: INewFieldProps) {
           <div>
             <label className="text-gray-900 font-semibold py-2">Selected Options</label>
             <div className="flex flex-wrap">
-              {fieldType.options.length === 0 ? (
-                <>
+              {(fieldType?.kind === "MULTISELECT" || fieldType?.kind === "RADIO") &&
+                (fieldType?.options.length === 0 ? (
                   <h1 className="font-light">No options added yet</h1>
-                </>
-              ) : (
-                fieldType.options.map((option, index) => (
-                  <div
-                    key={index}
-                    className="capitalize bg-blue-700 text-white rounded-full mx-4 my-2 py-1 px-3"
-                  >
-                    {option}{" "}
-                    <button
-                      onClick={() => {
-                        setFieldType({
-                          ...fieldType,
-                          options: fieldType.options.filter((_, itemIndex) => itemIndex !== index),
-                        });
-                      }}
-                      type="button"
+                ) : (
+                  fieldType?.options.map((option, index) => (
+                    <div
+                      key={index}
+                      className="capitalize bg-blue-700 text-white rounded-full mx-4 my-2 py-1 px-3"
                     >
-                      ⛔
-                    </button>
-                  </div>
-                ))
-              )}
+                      {option}
+                      <button
+                        onClick={() => {
+                          if (fieldType?.kind === "MULTISELECT" || fieldType?.kind === "RADIO")
+                            setFieldType({
+                              ...fieldType,
+                              options: fieldType.options.filter(
+                                (_, itemIndex) => itemIndex !== index
+                              ),
+                            });
+                        }}
+                        type="button"
+                      >
+                        ⛔
+                      </button>
+                    </div>
+                  ))
+                ))}
             </div>
           </div>
         </>

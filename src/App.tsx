@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import Form from "./components/pages/Form";
-import Home from "./components/pages/Home";
-import List from "./components/pages/List";
-import Result from "./components/pages/Result";
-import { formFields as initialFormField } from "./data/FormFieldData";
-import { IFormData } from "./types/FormsTypes";
+import AppRouter from "./router/AppRouter";
+import { UserType } from "./types/UserTypes";
+import { me } from "./util/ApiUtils";
+
+async function getCurrentUser(setCurrentUser: React.Dispatch<React.SetStateAction<UserType>>) {
+  const currentUser = await me();
+  setCurrentUser(currentUser);
+}
 
 function App() {
-  const [state, setState] = useState<string>("HOME");
+  const [currentUser, setCurrentUser] = useState<UserType>(null);
 
-  return (
-    <>
-      {state === "HOME" && <Home />}
-      {/* {state === "FORM" && <Form formId={initialFormData.id} />}
-      {state === "RESULT" && <Result formId={initialFormData.id} />} */}
-      {state === "LIST" && <List />}
-    </>
-  );
+  useEffect(() => {
+    getCurrentUser(setCurrentUser);
+  }, []);
+
+  return <AppRouter currentUser={currentUser} />;
 }
 
 export default App;

@@ -1,18 +1,27 @@
 import { navigate } from "raviger";
 import React, { useState } from "react";
-import { API_CREDENTIALS, API_BASE_URL } from "../config";
-import { dummyForm, Error, validateForm } from "../types/FormsTypes";
+import { formMetaType, Error } from "../types/FormsTypes";
 import { createForm } from "../util/ApiUtils";
 
+function validateForm(form: formMetaType): Error<formMetaType> {
+  const errors: Error<formMetaType> = {};
+  if (form.title.length < 1) {
+    errors.title = "Title is required";
+  } else if (form.title.length > 100) {
+    errors.title = "Title must be less than 100 characters";
+  }
+  return errors;
+}
+
 function CreateForm() {
-  const [form, setForm] = useState<dummyForm>({
-    id: 25164,
+  const [form, setForm] = useState<formMetaType>({
+    id: "25164",
     title: "",
     description: "string",
     is_public: false,
   });
 
-  const [errors, setErrors] = useState<Error<dummyForm>>({});
+  const [errors, setErrors] = useState<Error<formMetaType>>({});
 
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,7 +30,6 @@ function CreateForm() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const data = await createForm(form);
-        console.log(data);
         navigate(`/form/${data.id}`);
       } catch (error) {
         console.log(error);
