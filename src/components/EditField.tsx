@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { resultType } from "../types/ApiTypes";
-import { removeField, updateField } from "../util/ApiUtils";
+import { removeField } from "../util/ApiUtils";
 import Modal from "./common/Modal";
-import NewField from "./NewField";
 import UpdateField from "./UpdateField";
 
 function EditField(props: { fieldInfo: resultType; formId: string }) {
@@ -10,16 +9,9 @@ function EditField(props: { fieldInfo: resultType; formId: string }) {
   const { fieldInfo, formId } = props;
 
   async function removeFieldHandler() {
-    const data = await removeField(formId, fieldInfo.id);
-    console.log(data);
+    await removeField(formId, fieldInfo.id);
     document.location.reload();
   }
-
-  const [error, setError] = useState<{ [key: string]: boolean }>({
-    error1: false,
-    error2: false,
-    error3: false,
-  });
 
   return (
     <div className="pt-4">

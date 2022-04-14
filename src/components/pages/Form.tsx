@@ -1,13 +1,10 @@
 import { Link } from "raviger";
-import React, { useEffect, useRef, useReducer, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formFieldType, formMetaDataType } from "../../types/ApiTypes";
 import { formMetaType } from "../../types/FormsTypes";
-import { EditFormReducer } from "../../util/ActionReducerUtils";
 import { getFormMetaData, getFormFields, patchFormMetaData } from "../../util/ApiUtils";
-import { saveFormData, verifyFormId } from "../../util/StorageUtils";
 import NewField from "../NewField";
 import EditField from "../EditField";
-import PreviewField from "../PreviewField";
 
 async function fetchFormMetaData(
   formId: string,
@@ -19,7 +16,6 @@ async function fetchFormMetaData(
 
 async function fetchFormFields(formId: string, setFormFields: (data: formFieldType) => void) {
   const data = await getFormFields(formId);
-  console.log(data);
   setFormFields(data);
 }
 
@@ -29,8 +25,7 @@ async function updateFormMetaData(formId: string, formData: formMetaDataType) {
     description: formData.description,
     is_public: formData.is_public,
   };
-  const data = await patchFormMetaData(formId, updatedFormData);
-  console.log(data);
+  await patchFormMetaData(formId, updatedFormData);
 }
 
 function str2bool(value: string): boolean {
@@ -51,41 +46,16 @@ function Form(props: { formId: string }): JSX.Element {
     fetchFormFields(formId, setFormFields);
   }, [formId]);
 
-  const [formField, dispatch] = useReducer(EditFormReducer, {
-    id: formId,
-    formfields: [],
-    color: "#333",
-    title: "",
-  });
   const titleRef = useRef<HTMLInputElement>(null);
 
   //! Change the title of document if the Form component is rendered
   useEffect(() => {
-    document.title = formField.title + " Form - Settings";
+    document.title = formMetaData?.title + " Form - Settings";
     titleRef.current?.focus();
     return () => {
       document.title = "React App";
     };
-  }, [formField.title]);
-
-  //! Save the Form Data to LocalStorage on every change
-  useEffect(() => {
-    const timeout = setTimeout(() => saveFormData(formField), 1000);
-    return () => clearTimeout(timeout);
-  }, [formField]);
-
-  // useEffect(() => {
-  //   if (!verifyFormId(formId)) {
-  //     console.log("FALSE");
-  //     navigate("/form-do-not-exist", { replace: true });
-  //   } else {
-  //     console.log("TRUE");
-  //   }
-  // }, []);
-
-  function onChangeLabelHandler(label: string, id: string) {
-    dispatch({ type: "UPDATE_FORM_LABEL", id: id, label: label });
-  }
+  }, [formMetaData?.title]);
 
   return (
     <>

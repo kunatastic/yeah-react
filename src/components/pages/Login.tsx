@@ -16,11 +16,10 @@ function Login() {
     event.preventDefault();
     try {
       const data = await login(loginData.username, loginData.password);
-      console.log(data);
       localStorage.setItem("token", data.token);
       navigate("/");
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   }
 

@@ -57,9 +57,7 @@ function NewField(props: { formId: string }) {
       return;
     }
 
-    console.log(fieldType);
-    const data = await addField(formId, fieldType);
-    console.log(data);
+    await addField(formId, fieldType);
 
     setError({ ...error, error1: false, error2: false, error3: false });
     setFieldType({
@@ -86,7 +84,6 @@ function NewField(props: { formId: string }) {
 
   return (
     <div className="mt-4 p-4 rounded-xl bg-blue-200">
-      {console.log(fieldType)}
       <div className="grid grid-cols-3 gap-2 align-bottom">
         <div className="col-start-1 col-span-2">
           <label className="text-gray-900 font-semibold py-2">

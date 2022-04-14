@@ -16,7 +16,6 @@ async function getFormData(setFormCB: (data: formMetaType[]) => void) {
   try {
     const data: Pagination<formMetaType> = await listForm({ offset: 0, limit: 3 });
     setFormCB(data.results);
-    console.log(data);
   } catch (e) {
     console.error(e);
   }
