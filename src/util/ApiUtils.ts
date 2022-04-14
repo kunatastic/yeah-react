@@ -89,8 +89,8 @@ export async function addField(formId: string, field: inputTypes) {
     label: field.label,
     kind: field.kind,
     options: field.kind !== "TEXT" ? field.options : null,
+    value: field.value,
     meta: {
-      value: field.value,
       fieldType: field.fieldType,
     },
   };
@@ -102,8 +102,8 @@ export async function updateField(formId: string, fieldId: string, field: inputT
     label: field.label,
     kind: field.kind,
     options: field.kind !== "TEXT" ? field.options : null,
+    value: field.value,
     meta: {
-      value: field.value,
       fieldType: field.fieldType,
     },
   };

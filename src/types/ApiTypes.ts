@@ -22,6 +22,6 @@ export type resultType = {
   kind: AcceptedKind;
   label: string;
   options?: string[];
-  value?: string | string[];
+  value?: string;
   meta: any;
 };

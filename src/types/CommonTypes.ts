@@ -1,4 +1,4 @@
-import { inputTypes } from "./FormsTypes";
+import { resultType } from "./ApiTypes";
 
 export type Pagination<T> = {
   count: number;
@@ -15,6 +15,12 @@ export type PaginationParams = {
 export type AcceptedKind = "TEXT" | "RADIO" | "DROPDOWN";
 
 export type previewFieldProps = {
-  field: inputTypes;
-  onChangeHandler: (value: string | string[], id: string, kind: AcceptedKind) => void;
+  field: resultType;
+  value: formSubmissionValuesTypes;
+  onChangeHandler: (value: string, id: string) => void;
+};
+
+export type formSubmissionValuesTypes = {
+  form_field: string;
+  value: string;
 };

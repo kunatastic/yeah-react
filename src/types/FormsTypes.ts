@@ -1,4 +1,5 @@
-import { AcceptedKind } from "./CommonTypes";
+import { resultType } from "./ApiTypes";
+import { AcceptedKind, formSubmissionValuesTypes } from "./CommonTypes";
 
 export interface IFormData {
   id: string;
@@ -42,7 +43,7 @@ type radioInputTypes = {
 
 type multiSelectInputTypes = {
   id: string;
-  value?: string[];
+  value?: string;
   kind: "DROPDOWN";
   fieldType: fieldType;
   label: string;
@@ -52,8 +53,9 @@ type multiSelectInputTypes = {
 export type inputTypes = textInputTypes | radioInputTypes | multiSelectInputTypes;
 
 export type InputFormProps = {
-  onChangeHandler: (value: string | string[], id: string, kind: AcceptedKind) => void;
-  field: inputTypes;
+  onChangeHandler: (value: string, id: string) => void;
+  field: resultType;
+  value: formSubmissionValuesTypes;
 };
 
 export type formMetaType = {

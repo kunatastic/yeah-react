@@ -51,7 +51,7 @@ export const formFields: inputTypes[] = [
     id: "interest",
     options: ["Sleeping", "Reading", "Singing", "Coding"],
     label: "Interest",
-    value: [],
+    value: "",
   },
   {
     kind: "DROPDOWN",
@@ -59,6 +59,6 @@ export const formFields: inputTypes[] = [
     id: "languages",
     options: ["English", "Hindi", "Tamil", "Telugu"],
     label: "Languages",
-    value: [],
+    value: "",
   },
 ];
