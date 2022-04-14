@@ -46,7 +46,7 @@ export const formFields: inputTypes[] = [
     value: "",
   },
   {
-    kind: "MULTISELECT",
+    kind: "DROPDOWN",
     fieldType: "checkbox",
     id: "interest",
     options: ["Sleeping", "Reading", "Singing", "Coding"],
@@ -54,7 +54,7 @@ export const formFields: inputTypes[] = [
     value: [],
   },
   {
-    kind: "MULTISELECT",
+    kind: "DROPDOWN",
     fieldType: "multiple",
     id: "languages",
     options: ["English", "Hindi", "Tamil", "Telugu"],

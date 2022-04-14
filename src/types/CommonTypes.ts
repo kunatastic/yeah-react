@@ -12,13 +12,7 @@ export type PaginationParams = {
   limit: number;
 };
 
-export type editFieldProps = {
-  field: inputTypes;
-  onClickHandler: (id: string) => void;
-  onLabelChangeHandler: (label: string, id: string) => void;
-};
-
-export type AcceptedKind = "TEXT" | "RADIO" | "MULTISELECT";
+export type AcceptedKind = "TEXT" | "RADIO" | "DROPDOWN";
 
 export type previewFieldProps = {
   field: inputTypes;

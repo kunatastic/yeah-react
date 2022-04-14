@@ -7,6 +7,7 @@ import { getFormMetaData, getFormFields, patchFormMetaData } from "../../util/Ap
 import { saveFormData, verifyFormId } from "../../util/StorageUtils";
 import NewField from "../NewField";
 import EditField from "../EditField";
+import PreviewField from "../PreviewField";
 
 async function fetchFormMetaData(
   formId: string,
@@ -48,7 +49,7 @@ function Form(props: { formId: string }): JSX.Element {
   useEffect(() => {
     fetchFormMetaData(formId, setFormMetaData);
     fetchFormFields(formId, setFormFields);
-  }, []);
+  }, [formId]);
 
   const [formField, dispatch] = useReducer(EditFormReducer, {
     id: formId,
@@ -199,7 +200,7 @@ function Form(props: { formId: string }): JSX.Element {
           )}
         </div>
 
-        {formField.formfields !== undefined &&
+        {/* {formField.formfields !== undefined &&
           formField.formfields.map((field, index) => {
             return (
               <EditField
@@ -209,12 +210,16 @@ function Form(props: { formId: string }): JSX.Element {
                 onLabelChangeHandler={onChangeLabelHandler}
               />
             );
-          })}
+          })} */}
+
         {formFields?.count === 0 && (
           <p className="py-4 text-xl text-center">
             No formfields found!! Kindly add a new field to continue
           </p>
         )}
+        {formFields?.results.map((result, index) => {
+          return <EditField fieldInfo={result} formId={formId} key={index} />;
+        })}
 
         <NewField formId={formId} />
         <div className="flex justify-between w-full mt-5">

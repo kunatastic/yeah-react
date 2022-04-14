@@ -43,7 +43,7 @@ type radioInputTypes = {
 type multiSelectInputTypes = {
   id: string;
   value?: string[];
-  kind: "MULTISELECT";
+  kind: "DROPDOWN";
   fieldType: fieldType;
   label: string;
   options: string[];

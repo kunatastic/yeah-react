@@ -4,16 +4,17 @@ import { AcceptedKind } from "../types/CommonTypes";
 import { fieldType, IFormData, inputTypes } from "../types/FormsTypes";
 
 export function createNewFormField(
+  id: string,
   label: string = "",
   kind: AcceptedKind,
   fieldType: fieldType,
-  options: string[] = []
+  options: string[]
 ): inputTypes {
   switch (kind) {
     case "TEXT":
       return {
         kind: kind,
-        id: new Date().getTime().toString(),
+        id: id,
         label: label,
         fieldType: fieldType,
         value: "",
@@ -21,16 +22,16 @@ export function createNewFormField(
     case "RADIO":
       return {
         kind: kind,
-        id: new Date().getTime().toString(),
+        id: id,
         label: label,
         fieldType: fieldType,
         value: "",
         options: options,
       };
-    case "MULTISELECT":
+    case "DROPDOWN":
       return {
         kind: kind,
-        id: new Date().getTime().toString(),
+        id: id,
         label: label,
         fieldType: fieldType,
         value: [],
@@ -39,7 +40,7 @@ export function createNewFormField(
     default:
       return {
         kind: "TEXT",
-        id: new Date().getTime().toString(),
+        id: id,
         label: "Enter a label",
         fieldType: "text",
       };
@@ -51,6 +52,7 @@ export function EditFormReducer(state: IFormData, action: FormEditActions): IFor
   switch (action.type) {
     case "ADD_FORM_FIELD":
       const newField = createNewFormField(
+        new Date().getTime().toString(),
         action.fieldType.label,
         action.fieldType.kind,
         action.fieldType.fieldType,
@@ -106,7 +108,7 @@ export function PreviewFormReducer(state: IFormData, action: FormPreviewActions)
       return {
         ...state,
         formfields: state.formfields.map((field) => {
-          if (field.id === action.id && field.kind === "MULTISELECT")
+          if (field.id === action.id && field.kind === "DROPDOWN")
             return { ...field, value: action.value };
           return field;
         }),
@@ -117,7 +119,7 @@ export function PreviewFormReducer(state: IFormData, action: FormPreviewActions)
         formfields: state.formfields.map((field) => {
           if (field.id === action.id && (field.kind === "TEXT" || field.kind === "RADIO"))
             return { ...field, value: "" };
-          else if (field.id === action.id && field.kind === "MULTISELECT")
+          else if (field.id === action.id && field.kind === "DROPDOWN")
             return { ...field, value: [] };
           return field;
         }),

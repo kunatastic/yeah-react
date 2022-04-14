@@ -35,7 +35,7 @@ function Preview(props: { formId: string }) {
   }, [question]);
 
   function onChangeHandler(value: string[] | string, id: string, kind: AcceptedKind) {
-    if (kind === "MULTISELECT") {
+    if (kind === "DROPDOWN") {
       dispatch({ type: "UPDATE_FORM_VALUE_MULTIPLE", id: id, value: value as string[] });
     } else if (kind === "RADIO" || kind === "TEXT") {
       dispatch({ type: "UPDATE_FORM_VALUE_SINGLE", id: id, value: value as string });

@@ -1,3 +1,5 @@
+import { AcceptedKind } from "./CommonTypes";
+
 export type formMetaDataType = {
   id: number;
   created_by: number;
@@ -12,5 +14,14 @@ export type formFieldType = {
   count: number;
   next: null | string;
   previous: null | string;
-  results: any[];
+  results: resultType[];
+};
+
+export type resultType = {
+  id: string;
+  kind: AcceptedKind;
+  label: string;
+  options?: string[];
+  value?: string | string[];
+  meta: any;
 };

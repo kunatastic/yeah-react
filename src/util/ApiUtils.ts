@@ -89,16 +89,25 @@ export async function addField(formId: string, field: inputTypes) {
     label: field.label,
     kind: field.kind,
     options: field.kind !== "TEXT" ? field.options : null,
-    value: field.value,
     meta: {
-      fieldtype: field.fieldType,
+      value: field.value,
+      fieldType: field.fieldType,
     },
   };
   return request(`forms/${formId}/fields/`, "POST", payload);
 }
 
-export async function updateField(formId: string, fieldId: string, field: any) {
-  return request(`forms/${formId}/fields/${fieldId}/`, "PUT", field);
+export async function updateField(formId: string, fieldId: string, field: inputTypes) {
+  const payload = {
+    label: field.label,
+    kind: field.kind,
+    options: field.kind !== "TEXT" ? field.options : null,
+    meta: {
+      value: field.value,
+      fieldType: field.fieldType,
+    },
+  };
+  return request(`forms/${formId}/fields/${fieldId}/`, "PUT", payload);
 }
 
 export async function removeField(formId: string, fieldId: string) {

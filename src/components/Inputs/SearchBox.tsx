@@ -9,7 +9,7 @@ function SearchBox(props: {
   const [showDropDown, setShowDropDown] = useState<Boolean>(false);
 
   useEffect(() => {
-    if (props.field.kind === "MULTISELECT" && props.field.value !== undefined)
+    if (props.field.kind === "DROPDOWN" && props.field.value !== undefined)
       setSelectedItems(props.field.value);
   }, [props.field.kind, props.field.value]);
 
@@ -21,7 +21,7 @@ function SearchBox(props: {
     setSelectedItems(changeData);
   }
 
-  if (props.field.kind === "MULTISELECT" && props.field.fieldType === "multiple")
+  if (props.field.kind === "DROPDOWN" && props.field.fieldType === "multiple")
     return (
       <>
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
