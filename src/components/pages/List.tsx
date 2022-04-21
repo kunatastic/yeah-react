@@ -1,8 +1,9 @@
 import { Link, useQueryParams } from "raviger";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pagination } from "../../types/CommonTypes";
 import { formMetaType } from "../../types/FormsTypes";
 import { deleteForm, listForm } from "../../util/ApiUtils";
+import { UserLoginContext } from "../../util/LoginContext";
 import Modal from "../common/Modal";
 import CreateForm from "../CreateForm";
 
@@ -12,9 +13,15 @@ import CreateForm from "../CreateForm";
 //     .then((data) => setFormCB(data));
 // }
 
-async function getFormData(setFormCB: (data: formMetaType[]) => void) {
+const DISPLAY_COUNT = 4;
+
+async function getFormData(setFormCB: (data: formMetaType[]) => void, pageNumber: number) {
   try {
-    const data: Pagination<formMetaType> = await listForm({ offset: 0, limit: 3 });
+    const data: Pagination<formMetaType> = await listForm({
+      offset: pageNumber * DISPLAY_COUNT,
+      limit: DISPLAY_COUNT,
+    });
+    console.log(data);
     setFormCB(data.results);
   } catch (e) {
     console.error(e);
@@ -22,22 +29,40 @@ async function getFormData(setFormCB: (data: formMetaType[]) => void) {
 }
 
 function List() {
+  const { user } = useContext(UserLoginContext);
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState<string>("");
   const [form, setForm] = useState<formMetaType[]>([]);
   const [newForm, setNewForm] = useState(false);
+  const [pgNumber, setPgNumber] = useState(0);
 
   useEffect(() => {
-    getFormData((data) => setForm(data));
-  }, []);
+    getFormData((data) => setForm(data), pgNumber);
+  }, [pgNumber]);
 
   async function deleteFormData(formId: string) {
     await deleteForm(formId);
-    getFormData((data) => setForm(data));
+    getFormData((data) => setForm(data), pgNumber);
   }
 
   return (
     <>
+      <div className="flex justify-center">
+        <button
+          className="py-2 mx-5 bg-blue-200 px-4 rounded-md w-32 border-blue-400 border-2 hover:bg-blue-400"
+          onClick={() => setPgNumber(pgNumber - 1)}
+        >
+          ◀ Previous
+        </button>
+        <div className="py-2 mx-1">{pgNumber + 1}</div>
+        <button
+          className="py-2 mx-5 bg-blue-200 px-4 rounded-md w-32 border-blue-400 border-2 hover:bg-blue-400"
+          onClick={() => setPgNumber(pgNumber + 1)}
+        >
+          Next ▶
+        </button>
+      </div>
+
       <form
         method="GET"
         action=""
@@ -77,28 +102,35 @@ function List() {
               >
                 <div className="p-4">
                   <h1 className="text-xl font-semibold">
-                    {index + 1}.) {form.title}
+                    {index + 1}.) {form.title}{" "}
+                    <span className="text-sm bg-blue-400 p-1 my-1 rounded-md">
+                      {form.is_public ? "Public" : "Private"}
+                    </span>
                   </h1>
                   <p className="text-sm">{form.description}</p>
-                  <span className="text-sm">{form.is_public ? "Public" : "Private"}</span>
                 </div>
-                <div className="flex flex-col justify-between px-4 py-2">
-                  <button
-                    className="text-black bg-red-400 text-center w-full px-2 hover:bg-red-500 border border-transparent border-black"
-                    onClick={() => {
-                      if (form.id) deleteFormData(form.id);
-                    }}
-                    type="button"
-                  >
-                    Delete
-                  </button>
-                  <Link
-                    className="text-black bg-blue-400 text-center w-full px-2 hover:bg-blue-500 border border-transparent border-black"
-                    type="button"
-                    href={`/form/${form.id}`}
-                  >
-                    Edit
-                  </Link>
+                <div className="flex flex-col items-center justify-between px-4 py-2">
+                  {user !== null && user.username !== "" && (
+                    <button
+                      className="text-black bg-red-400 text-center w-full px-2 hover:bg-red-500 border border-transparent border-black"
+                      onClick={() => {
+                        if (form.id) deleteFormData(form.id);
+                      }}
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                  )}
+                  {user !== null && user.username !== "" && (
+                    <Link
+                      className="text-black bg-blue-400 text-center w-full px-2 hover:bg-blue-500 border border-transparent border-black"
+                      type="button"
+                      href={`/form/${form.id}`}
+                    >
+                      Edit
+                    </Link>
+                  )}
+
                   <Link
                     className="text-black bg-green-400 text-center w-full px-2 hover:bg-green-500 border border-transparent border-black"
                     type="button"
@@ -110,17 +142,19 @@ function List() {
               </div>
             );
           })}
-        <div className="w-full p-4 border-black bg-gray-200 rounded-md shadow-xl hover:shadow-md hover:bg-gray-300">
-          <h1 className="text-xl font-semibold">New Form</h1>
-          <div className="flex justify-between mt-5">
-            <button
-              className="text-white bg-blue-500 w-full hover:bg-blue-600 border border-transparent hover:border-black"
-              onClick={() => setNewForm(true)}
-            >
-              Create New Form
-            </button>
+        {user !== null && user.username !== "" && (
+          <div className="w-full p-4 border-black bg-gray-200 rounded-md shadow-xl hover:shadow-md hover:bg-gray-300">
+            <h1 className="text-xl font-semibold">New Form</h1>
+            <div className="flex justify-between mt-5">
+              <button
+                className="text-white bg-blue-500 w-full hover:bg-blue-600 border border-transparent hover:border-black"
+                onClick={() => setNewForm(true)}
+              >
+                Create New Form
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <Modal open={newForm} onCloseCB={() => setNewForm(false)}>
           <CreateForm />

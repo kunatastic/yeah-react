@@ -1,4 +1,4 @@
-import { AcceptedKind } from "./CommonTypes";
+import { AcceptedKind, formSubmissionValuesTypes } from "./CommonTypes";
 
 export type formMetaDataType = {
   id: number;
@@ -24,4 +24,22 @@ export type resultType = {
   options?: string[];
   value?: string;
   meta: any;
+};
+
+export type submissionType = {
+  answers: formSubmissionValuesTypes[];
+  form: Omit<formMetaDataType, "created_by" | "created_date" | "modified_date" | "id">;
+};
+
+export type submissionResultType = {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: customResult;
+};
+
+export type customResult = {
+  id: number;
+  form: resultType[];
+  created_date: string;
 };

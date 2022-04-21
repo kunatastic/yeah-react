@@ -9,18 +9,22 @@ import MultiSelect from "./Inputs/MultiSelect";
 
 function PreviewField(props: previewFieldProps) {
   const { field, onChangeHandler, value } = props;
-  return (
-    <div className="pt-4">
-      {/* TEXT KIND */}
-      <Text field={field} onChangeHandler={onChangeHandler} value={value} />
-      {/* DROPDOWN KIND */}
-      <Radio field={field} onChangeHandler={onChangeHandler} value={value} />
-      <Select field={field} onChangeHandler={onChangeHandler} value={value} />
-      {/* MULTISELECT KIND */}
-      <CheckBox field={field} onChangeHandler={onChangeHandler} value={value} />
-      <MultiSelect field={field} onChangeHandler={onChangeHandler} value={value} />
-    </div>
-  );
+  if (value !== undefined)
+    return (
+      <>
+        <div className="pt-4">
+          {/* TEXT KIND */}
+          <Text field={field} onChangeHandler={onChangeHandler} value={value} />
+          {/* DROPDOWN KIND */}
+          <Radio field={field} onChangeHandler={onChangeHandler} value={value} />
+          <Select field={field} onChangeHandler={onChangeHandler} value={value} />
+          {/* MULTISELECT KIND */}
+          <CheckBox field={field} onChangeHandler={onChangeHandler} value={value} />
+          <MultiSelect field={field} onChangeHandler={onChangeHandler} value={value} />
+        </div>
+      </>
+    );
+  return null;
 }
 
 export default PreviewField;

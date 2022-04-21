@@ -1,27 +1,42 @@
-import { Link } from "raviger";
-import React, { useEffect } from "react";
-import { NavRoutes } from "../../data/NavRoutesData";
+import { Link, navigate } from "raviger";
+import React, { useContext } from "react";
 import logo from "../../logo.svg";
-import { UserType } from "../../types/UserTypes";
+import { UserLoginContext } from "../../util/LoginContext";
 
-function Header(props: { currentUser: UserType }) {
-  const { currentUser } = props;
+function HeaderLink(loggedIn: boolean, logoutLogic: () => void) {
+  console.log(loggedIn);
+  if (loggedIn) {
+    return [
+      { label: "Home", route: "/" },
+      { label: "About", route: "/about" },
+      { label: "List", route: "/list" },
+      {
+        label: "Logout",
+        onClick: () => {
+          localStorage.removeItem("token");
+          logoutLogic();
+          navigate("/login");
+        },
+      },
+    ];
+  }
+  return [
+    { label: "Home", route: "/" },
+    { label: "About", route: "/about" },
+    { label: "List", route: "/list" },
+    { label: "Login", route: "/login" },
+  ];
+}
 
+function Header() {
+  const { user, setUser } = useContext(UserLoginContext);
   return (
     <>
       <div className="flex gap-2 items-center">
         <img src={logo} alt="logo" className="w-32 h-32 animate-spin" />
         <div className="flex gap-2 items-center">
-          {NavRoutes.filter((item) => {
-            if (item.label === "Logout") {
-              if (currentUser === null) return false;
-              if (currentUser?.username.length === 0) return false;
-            }
-            if (item.label === "Login") {
-              if (currentUser?.username.length > 0) return false;
-            }
-            return true;
-          }).map((item, index) => (
+          {console.log(user)}
+          {HeaderLink(user !== null && user.username !== "", setUser).map((item, index) => (
             <React.Fragment key={index}>
               {item.route && (
                 <Link

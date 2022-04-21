@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "../config";
+import { submissionType } from "../types/ApiTypes";
 import { PaginationParams } from "../types/CommonTypes";
 import { formMetaType, inputTypes } from "../types/FormsTypes";
 
@@ -114,18 +115,10 @@ export async function removeField(formId: string, fieldId: string) {
   return request(`forms/${formId}/fields/${fieldId}/`, "DELETE");
 }
 
-export async function getOptions(formId: string, fieldId: string) {
-  return request(`forms/${formId}/fields/${fieldId}/options/`, "GET");
+export async function getSubmissionValue(formId: string) {
+  return request(`forms/${formId}/submission/`);
 }
 
-export async function addOption(formId: string, fieldId: string, option: any) {
-  return request(`forms/${formId}/fields/${fieldId}/options/`, "POST", option);
-}
-
-export async function updateOption(formId: string, fieldId: string, optionId: string, option: any) {
-  return request(`forms/${formId}/fields/${fieldId}/options/${optionId}/`, "PUT", option);
-}
-
-export async function removeOption(formId: string, fieldId: string, optionId: string) {
-  return request(`forms/${formId}/fields/${fieldId}/options/${optionId}/`, "DELETE");
+export async function postSubmissionValue(formId: string, data: submissionType) {
+  return request(`forms/${formId}/submission/`, "POST", data);
 }

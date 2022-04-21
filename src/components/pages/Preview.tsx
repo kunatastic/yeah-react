@@ -1,8 +1,9 @@
 import { useQueryParams } from "raviger";
 import React, { useEffect, useState } from "react";
-import { formFieldType, formMetaDataType } from "../../types/ApiTypes";
+import { formFieldType, formMetaDataType, resultType } from "../../types/ApiTypes";
 import { formSubmissionValuesTypes } from "../../types/CommonTypes";
-import { getFormFields, getFormMetaData } from "../../util/ApiUtils";
+import { getFormFields, getFormMetaData, postSubmissionValue } from "../../util/ApiUtils";
+import Modal from "../common/Modal";
 import PreviewField from "../PreviewField";
 
 async function fetchFormMetaData(
@@ -17,12 +18,12 @@ async function fetchFormMetaData(
 async function fetchFormFields(
   formId: string,
   setFormFields: (data: formFieldType) => void,
-  cb?: () => void
+  // setFormSubmissionValue: (value: React.SetStateAction<formSubmissionValuesTypes[]>) => void
+  cb: (data: resultType[]) => void
 ) {
-  const data = await getFormFields(formId);
-  console.log(data);
+  const data: formFieldType = await getFormFields(formId);
   setFormFields(data);
-  if (cb) cb();
+  cb(data.results);
 }
 
 function Preview(props: { formId: string }) {
@@ -33,6 +34,8 @@ function Preview(props: { formId: string }) {
   const [formFields, setFormFields] = useState<null | formFieldType>(null);
 
   const [formSubmissionValue, setFormSubmissionValue] = useState<formSubmissionValuesTypes[]>([]);
+  const [indexArr, setIndexArr] = useState<string[]>([]);
+  const [openModal, setOpenModal] = useState(false);
 
   //! Change the title of document if the Form component is rendered
   useEffect(() => {
@@ -56,13 +59,14 @@ function Preview(props: { formId: string }) {
 
   useEffect(() => {
     fetchFormMetaData(formId, setFormMetaData);
-    fetchFormFields(formId, setFormFields, () => {
+    fetchFormFields(formId, setFormFields, (data) => {
       let newState: formSubmissionValuesTypes[] = [];
-      formFields?.results.forEach((result) => {
+      data.forEach((result: resultType) => {
         newState.push({ form_field: result.id, value: "" });
       });
-      console.log("CB called", newState);
+      const index = newState.map((item) => item.form_field);
       setFormSubmissionValue(newState);
+      setIndexArr(index);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId]);
@@ -78,15 +82,16 @@ function Preview(props: { formId: string }) {
     });
   }
 
-  // function handleSaveAndResult() {
-  //   saveFormData(formField);
-  //   navigate(`/result/${formId}`);
-  // }
+  function handleSaveAndResult() {
+    // saveFormData(formField);
+    // navigate(`/result/${formId}`);
+    if (formMetaData !== null)
+      postSubmissionValue(formId, { answers: formSubmissionValue, form: formMetaData });
+  }
 
   return (
     <>
       <div className="p-4 rounded-xl shadow-inner bg-yellow-50 overflow-hidden relative">
-        {JSON.stringify(formSubmissionValue)}
         {formFields?.count === 0 ? (
           <>
             <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-l from-blue-600 to-blue-400">
@@ -108,16 +113,22 @@ function Preview(props: { formId: string }) {
               field={formField.formfields[question]}
               // onChangeHandler={onChangeHandler}
             /> */}
-            {formFields?.results.map((result, index) => (
+            {formFields && (
+              <PreviewField
+                field={formFields.results[question]}
+                onChangeHandler={onChangeHandler}
+                value={formSubmissionValue[indexArr.indexOf(formFields.results[question].id)]}
+              />
+            )}
+            {/* {formFields?.results.map((result, index) => (
               <React.Fragment key={index}>
-                <br /> {index + 1}. {result.kind} {result.label}
                 <PreviewField
                   field={result}
-                  value={formSubmissionValue.filter((item) => item.form_field === result.id)[0]}
+                  value={formSubmissionValue[indexArr.indexOf(result.id)]}
                   onChangeHandler={onChangeHandler}
                 />
               </React.Fragment>
-            ))}
+            ))} */}
             <div className="flex justify-center mt-8 w-full">
               <button
                 className={`w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black ${
@@ -130,31 +141,73 @@ function Preview(props: { formId: string }) {
               >
                 ◀ Previous
               </button>
-              <button
-                className={`w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black ${
-                  question + 1 === formFields?.count && "bg-blue-300 hover:bg-blue-400"
-                }`}
-                type="button"
-                onClick={() => {
-                  if (question !== formFields?.count) setQuestion(question + 1);
-                }}
-              >
-                {formFields?.count === question + 1 ? "Submit ▶" : "Next ▶"}
-              </button>
+
+              {formFields?.count === question + 1 ? (
+                <button
+                  className="w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black bg-blue-300 hover:bg-blue-400"
+                  type="button"
+                  onClick={() => {
+                    setOpenModal(true);
+                  }}
+                >
+                  Submit
+                </button>
+              ) : (
+                <>
+                  <button
+                    className="w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black"
+                    type="button"
+                    onClick={() => {
+                      if (question !== formFields?.count) setQuestion(question + 1);
+                    }}
+                  >
+                    Next ▶
+                  </button>
+                </>
+              )}
             </div>
           </>
         )}
 
-        <div className="flex justify-between w-full mt-5">
+        {/* <div className="flex justify-between w-full mt-5">
           {question === formFields?.count && (
             <button
               className="text-white w-full bg-blue-500 mx-2 px-4 py-2 text-center rounded-lg hover:bg-blue-600 border-2 border-transparent  hover:border-black"
-              // onClick={handleSaveAndResult}
+              onClick={handleSaveAndResult}
             >
               Save and view Result ✔
             </button>
           )}
-        </div>
+        </div> */}
+
+        <Modal open={openModal} onCloseCB={() => setOpenModal(false)}>
+          <div className="py-5 px-2">
+            <h1 className="text-semibold">
+              Heads up!! The fields cannot be modified later are you sure you want to submit the
+              form
+            </h1>
+            <div className="flex justify-center mt-8 w-full">
+              <button
+                className="w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black"
+                onClick={() => setOpenModal(false)}
+                type="button"
+              >
+                ❌ Cancel
+              </button>
+              <button
+                className="w-full mx-2 px-4 py-2 text-center rounded-lg border-2 border-black"
+                onClick={() => {
+                  if (question !== formFields?.count) setQuestion(question + 1);
+                  handleSaveAndResult();
+                  setOpenModal(false);
+                }}
+                type="button"
+              >
+                Submit ✔
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );

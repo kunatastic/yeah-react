@@ -1,8 +1,10 @@
 import { navigate } from "raviger";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { login } from "../../util/ApiUtils";
+import { UserLoginContext } from "../../util/LoginContext";
 
 function Login() {
+  const { setUser } = useContext(UserLoginContext);
   const [loginData, setLoginData] = useState({ username: "__kunal", password: "Welcome@123" });
 
   useEffect(() => {
@@ -17,6 +19,7 @@ function Login() {
     try {
       const data = await login(loginData.username, loginData.password);
       localStorage.setItem("token", data.token);
+      setUser();
       navigate("/");
     } catch (error) {
       console.log(error);
