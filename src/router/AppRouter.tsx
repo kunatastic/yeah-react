@@ -6,11 +6,17 @@ import List from "../components/pages/List";
 import Preview from "../components/pages/Preview";
 import Result from "../components/pages/Result";
 import Login from "../components/pages/Login";
-import Home from "../components/pages/Home";
 import ProtectRouteUtil from "../util/ProtectRouteUtil";
+import React from "react";
+
+const Home = React.lazy(() => import("../components/pages/Home"));
 
 const routes = {
-  "/": () => <Home />,
+  "/": () => (
+    <React.Suspense fallback={<h1>Loading...</h1>}>
+      <Home />
+    </React.Suspense>
+  ),
   "/login": () => <Login />,
   "/about": () => <About />,
   "/list": () => <List />,
