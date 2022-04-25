@@ -17,7 +17,7 @@ function CreateForm() {
   const [form, setForm] = useState<formMetaType>({
     id: "25164",
     title: "",
-    description: "string",
+    description: "",
     is_public: false,
   });
 
