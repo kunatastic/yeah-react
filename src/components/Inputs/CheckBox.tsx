@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { InputFormProps } from "../../types/forms";
+import { InputFormProps } from "../../types/FormsTypes";
 
 function CheckBox(props: InputFormProps) {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string>("");
 
   useEffect(() => {
-    if (props.field.kind === "multiselect") setSelectedItems(props.field.value);
-  }, [props.field.kind, props.field.value]);
+    if (props.field.kind === "DROPDOWN" && props.value.value !== undefined)
+      setSelectedItems(props.value.value);
+  }, [props.field.kind, props.value.value]);
 
   async function handleCheckboxField(event: React.ChangeEvent<HTMLInputElement>) {
     const isChecked = event.target.checked;
     const value = event.target.value;
 
-    let changeData = [...selectedItems];
+    let changeData = selectedItems.split(",");
     if (isChecked) changeData.push(value);
     else changeData = changeData.filter((item) => item !== value);
-
-    props.onChangeHandler(changeData, props.field.id, props.field.kind);
-    setSelectedItems(changeData);
+    const changeDataStringified = changeData.join(",");
+    props.onChangeHandler(changeDataStringified, props.field.id);
+    setSelectedItems(changeDataStringified);
   }
 
-  if (props.field.kind === "multiselect" && props.field.type === "checkbox")
+  if (props.field.kind === "DROPDOWN" && props.field.meta.fieldType === "checkbox")
     return (
       <>
         <label className="text-gray-900 font-semibold py-2">{props.field.label}</label>
         <br />
-        {props.field.options.map((option, index) => {
+        {(props.field.options as string[]).map((option, index) => {
           return (
             <React.Fragment key={index}>
               <input
-                type={props.field.type}
+                type={props.field.meta.fieldType}
                 name={props.field.label}
                 value={option}
                 checked={selectedItems.includes(option)}

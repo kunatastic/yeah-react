@@ -1,6 +1,6 @@
 import { Link } from "raviger";
 import React from "react";
-import logo from "../logo.svg";
+import logo from "../../logo.svg";
 
 function Home() {
   return (

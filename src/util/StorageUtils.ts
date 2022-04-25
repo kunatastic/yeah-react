@@ -1,6 +1,6 @@
 import { navigate } from "raviger";
 import { LOCAL_STORAGE_KEY } from "../config";
-import { IFormData } from "../types/forms";
+import { IFormData } from "../types/FormsTypes";
 
 //! Save the Form Data to LocalStorage
 export function saveFormData(currentState: IFormData) {
@@ -25,6 +25,18 @@ export function getInitialFormData(formId: string): IFormData {
   const localForms = getLocalForms();
   const formData = localForms.find((form) => form.id === formId);
   if (formData) return formData;
-  navigate("/form-do-not-exist", { replace: true });
-  return {} as never;
+  // navigate("/form-do-not-exist", { replace: true });
+  return {
+    id: formId,
+    formfields: [],
+    color: "#123456",
+    title: "",
+  };
+}
+
+//! verify valid formId
+export function verifyFormId(formId: string): boolean {
+  const localForms = getLocalForms();
+  const formData = localForms.find((form) => form.id === formId);
+  return formData ? true : false;
 }

@@ -1,18 +1,29 @@
 import { useRoutes } from "raviger";
-import App from "../App";
-import About from "../components/About";
-import Container from "../components/Container";
-import Form from "../components/Form";
-import List from "../components/List";
-import Preview from "../components/Preview";
-import Result from "../components/Result";
+import About from "../components/pages/About";
+import Container from "../components/common/Container";
+import Form from "../components/pages/Form";
+import List from "../components/pages/List";
+import Preview from "../components/pages/Preview";
+import Result from "../components/pages/Result";
+import Login from "../components/pages/Login";
+import Home from "../components/pages/Home";
+import ProtectRouteUtil from "../util/ProtectRouteUtil";
 
 const routes = {
-  "/": () => <App />,
+  "/": () => <Home />,
+  "/login": () => <Login />,
   "/about": () => <About />,
   "/list": () => <List />,
-  "/form/:formId": ({ formId }: { formId: string }) => <Form formId={formId} />,
-  "/result/:formId": ({ formId }: { formId: string }) => <Result formId={formId} />,
+  "/form/:formId": ({ formId }: { formId: string }) => (
+    <ProtectRouteUtil>
+      <Form formId={formId} />
+    </ProtectRouteUtil>
+  ),
+  "/result/:formId": ({ formId }: { formId: string }) => (
+    <ProtectRouteUtil>
+      <Result formId={formId} />
+    </ProtectRouteUtil>
+  ),
   "/form-do-not-exist": () => <>Form does not exist or locked</>,
   "/preview/:formId": ({ formId }: { formId: string }) => <Preview formId={formId} />,
 };

@@ -1,4 +1,4 @@
-import { inputTypes } from "./forms";
+import { inputTypes } from "./FormsTypes";
 
 type RemoveFormAction = { type: "REMOVE_FORM_FIELD"; id: string };
 type AddFormAction = { type: "ADD_FORM_FIELD"; fieldType: inputTypes };

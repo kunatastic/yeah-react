@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { resultType } from "../types/ApiTypes";
 import { AcceptedKind } from "../types/CommonTypes";
 import { fieldType, inputTypes } from "../types/FormsTypes";
 import { createNewFormField } from "../util/ActionReducerUtils";
-import { addField } from "../util/ApiUtils";
+import { updateField } from "../util/ApiUtils";
 
 const fieldTypes: { label: string; value: string; kind: AcceptedKind }[] = [
   { label: "Text", value: "text", kind: "TEXT" },
@@ -26,23 +27,26 @@ const optionFieldTypes: { label: string; value: fieldType; kind: "RADIO" | "DROP
   { label: "Radio", value: "radio", kind: "RADIO" },
 ];
 
-function NewField(props: { formId: string }) {
-  const { formId } = props;
+function UpdateField(props: { formId: string; initialData: resultType; onCloseCB: () => void }) {
+  const { formId, initialData, onCloseCB } = props;
   const [error, setError] = useState<{ [key: string]: boolean }>({
     error1: false,
     error2: false,
     error3: false,
   });
   const [optionInput, setOptionInput] = useState<string>("");
-  const [fieldType, setFieldType] = useState<inputTypes>({
-    label: "",
-    kind: "TEXT",
-    fieldType: "text",
-    id: new Date().getTime().toString(),
+  const [fieldType, setFieldType] = useState<inputTypes>(() => {
+    return createNewFormField(
+      initialData.id,
+      initialData.label,
+      initialData.kind,
+      initialData.meta.fieldType,
+      initialData?.options ? initialData.options : []
+    );
   });
 
   //! Add a new Field to the Form
-  async function addNewField() {
+  async function updateFieldInput() {
     if (fieldType?.label.length === 0) {
       setError({ ...error, error1: true });
       return;
@@ -56,34 +60,20 @@ function NewField(props: { formId: string }) {
       setError({ ...error, error3: true });
       return;
     }
-
-    await addField(formId, fieldType);
-
+    await updateField(formId, fieldType.id, fieldType);
     setError({ ...error, error1: false, error2: false, error3: false });
-    setFieldType({
-      label: "",
-      kind: "TEXT",
-      fieldType: "text",
-      id: new Date().getTime().toString(),
-    });
-    // document.location.reload();
+    onCloseCB();
   }
 
   function onChangeHandler(formFieldType: fieldType) {
     const tempType = fieldTypes.filter((field) => field.value === formFieldType);
     setFieldType((prevState) => {
-      return createNewFormField(
-        new Date().getTime().toString(),
-        prevState.label,
-        tempType[0].kind,
-        formFieldType,
-        []
-      );
+      return createNewFormField(prevState.id, prevState.label, tempType[0].kind, formFieldType, []);
     });
   }
 
   return (
-    <div className="mt-4 p-4 rounded-xl bg-blue-200">
+    <div className="mt-4 p-4 rounded-xl">
       <div className="grid grid-cols-3 gap-2 align-bottom">
         <div className="col-start-1 col-span-2">
           <label className="text-gray-900 font-semibold py-2">
@@ -182,13 +172,13 @@ function NewField(props: { formId: string }) {
       )}
       <button
         className="text-white w-full bg-gray-500 px-4 py-2 border-2 border-transparent hover:border-green-500 mt-5 rounded-lg hover:bg-gray-600"
-        onClick={addNewField}
+        onClick={updateFieldInput}
         type="button"
       >
-        Add New Field ➕
+        Update Field ➕
       </button>
     </div>
   );
 }
 
-export default NewField;
+export default UpdateField;
