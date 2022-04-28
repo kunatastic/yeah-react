@@ -2,6 +2,7 @@ import { navigate } from "raviger";
 import React, { useState } from "react";
 import { formMetaType, Error } from "../types/FormsTypes";
 import { createForm } from "../util/ApiUtils";
+import Confetti, { ConfettiConfig } from "react-dom-confetti";
 
 function validateForm(form: formMetaType): Error<formMetaType> {
   const errors: Error<formMetaType> = {};
@@ -15,13 +16,27 @@ function validateForm(form: formMetaType): Error<formMetaType> {
 
 function CreateForm() {
   const [form, setForm] = useState<formMetaType>({
-    id: "25164",
+    id: "",
     title: "",
     description: "",
     is_public: false,
   });
 
+  const config: ConfettiConfig = {
+    angle: 152,
+    spread: 300,
+    startVelocity: 40,
+    elementCount: 97,
+    dragFriction: 0.2,
+    duration: 5000,
+    stagger: 0,
+    width: "7px",
+    height: "13px",
+    colors: ["#000", "#00f"],
+  };
+
   const [errors, setErrors] = useState<Error<formMetaType>>({});
+  const [start, setStart] = useState(false);
 
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,6 +45,8 @@ function CreateForm() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const data = await createForm(form);
+        setStart(true);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         navigate(`/form/${data.id}`);
       } catch (error) {
         console.log(error);
@@ -39,6 +56,9 @@ function CreateForm() {
 
   return (
     <>
+      <div className=" flex justify-center t-0 z-50">
+        <Confetti config={config} active={start} />
+      </div>
       <div className="w-full max-w-lg divide-y divide-gray-200">
         <h1 className="text-2xl my-2 text-gray-700">Create New Form</h1>
         <form onSubmit={handleFormSubmit}>
@@ -102,7 +122,7 @@ function CreateForm() {
           </div>
 
           <button
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+            className="w-full px-4 py-2 z-50 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Create Form
